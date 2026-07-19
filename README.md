@@ -48,8 +48,8 @@ cd backend
 # Démarrer PostgreSQL via Docker seulement
 docker run -d --name plantverde-db \
   -e POSTGRES_DB=plantverde \
-  -e POSTGRES_USER=plantverde \
-  -e POSTGRES_PASSWORD=plantverde123 \
+  -e POSTGRES_USER=*** \
+  -e POSTGRES_PASSWORD=*** \
   -p 5432:5432 postgres:16-alpine
 
 # Lancer Spring Boot
@@ -78,9 +78,9 @@ npm start
 
 | Rôle   | Email                    | Mot de passe |
 |--------|--------------------------|--------------|
-| Admin  | admin@plantverde.dz      | admin123     |
-| Client | karim@test.dz            | client123    |
-| Client | amira@test.dz            | client123    |
+| Admin  | admin@plantverde.dz      | ***          |
+| Client | karim@test.dz            | ***          |
+| Client | amira@test.dz            | ***          |
 
 ---
 
