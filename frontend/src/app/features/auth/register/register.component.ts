@@ -96,7 +96,13 @@ export class RegisterComponent {
 
   submit(): void {
     this.form.markAllAsTouched();
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      const lang = this.i18n.currentLang();
+      const summary = lang === 'ar' ? 'خطأ' : (lang === 'en' ? 'Error' : 'Erreur');
+      const detail = lang === 'ar' ? 'يرجى تصحيح الأخطاء في النموذج' : (lang === 'en' ? 'Please fix the errors in the form' : 'Veuillez corriger les erreurs du formulaire');
+      this.toast.add({ severity: 'error', summary, detail });
+      return;
+    }
     this.loading = true;
 
     const { confirm, terms, ...data } = this.form.value;
