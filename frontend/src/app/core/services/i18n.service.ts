@@ -258,6 +258,10 @@ export interface Translations {
   admin_users_disabled: string;
   admin_users_protected: string;
   admin_users_none: string;
+  admin_users_create: string;
+  admin_users_create_title: string;
+  admin_users_role_admin: string;
+  admin_users_role_client: string;
 
 
   // REVIEWS
@@ -436,6 +440,8 @@ const FR: Translations = {
   admin_users_status: 'Statut', admin_users_joined: 'Inscription', admin_users_actions: 'Actions',
   admin_users_active: 'Actif', admin_users_disabled: 'Désactivé',
   admin_users_protected: 'Protégé', admin_users_none: 'Aucun utilisateur',
+  admin_users_create: 'Créer un compte', admin_users_create_title: 'Nouvel utilisateur',
+  admin_users_role_admin: 'Administrateur', admin_users_role_client: 'Client',
 
   review_title: 'Évaluations clients', review_sub: 'Ce que pensent nos clients',
   review_write: 'Évaluer le service', review_edit: 'Modifier mon avis',
@@ -590,6 +596,8 @@ const EN: Translations = {
   admin_users_status: 'Status', admin_users_joined: 'Joined', admin_users_actions: 'Actions',
   admin_users_active: 'Active', admin_users_disabled: 'Disabled',
   admin_users_protected: 'Protected', admin_users_none: 'No users',
+  admin_users_create: 'Create account', admin_users_create_title: 'New User',
+  admin_users_role_admin: 'Administrator', admin_users_role_client: 'Client',
 
   review_title: 'Customer Reviews', review_sub: 'What our customers think',
   review_write: 'Write a review', review_edit: 'Edit my review',
@@ -744,6 +752,8 @@ const AR: Translations = {
   admin_users_status: 'الحالة', admin_users_joined: 'تاريخ الانضمام', admin_users_actions: 'الإجراءات',
   admin_users_active: 'نشط', admin_users_disabled: 'معطّل',
   admin_users_protected: 'محمي', admin_users_none: 'لا مستخدمين',
+  admin_users_create: 'إنشاء حساب', admin_users_create_title: 'مستخدم جديد',
+  admin_users_role_admin: 'مدير', admin_users_role_client: 'عميل',
 
   review_title: 'تقييمات العملاء', review_sub: 'ماذا يقول عملاؤنا',
   review_write: 'تقييم الخدمة', review_edit: 'تعديل تقييمي',

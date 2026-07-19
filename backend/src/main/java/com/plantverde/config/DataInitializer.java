@@ -38,20 +38,20 @@ public class DataInitializer implements CommandLineRunner {
         User admin = userRepository.save(User.builder()
             .firstName("Admin").lastName("PlantVerde")
             .email("admin@plantverde.dz")
-            .password(passwordEncoder.encode("***"))
+            .password(passwordEncoder.encode("password"))
             .role(User.Role.ADMIN).enabled(true).build());
 
         User client1 = userRepository.save(User.builder()
             .firstName("Karim").lastName("Benali")
             .email("karim@test.dz")
-            .password(passwordEncoder.encode("***"))
+            .password(passwordEncoder.encode("password"))
             .phone("0555123456").address("12 Rue des Oliviers, Alger")
             .role(User.Role.CLIENT).enabled(true).build());
 
         User client2 = userRepository.save(User.builder()
             .firstName("Amira").lastName("Cherif")
             .email("amira@test.dz")
-            .password(passwordEncoder.encode("***"))
+            .password(passwordEncoder.encode("password"))
             .phone("0661987654").address("5 Cité Jardin, Oran")
             .role(User.Role.CLIENT).enabled(true).build());
 

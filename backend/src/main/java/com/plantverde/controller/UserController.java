@@ -27,6 +27,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getAll());
     }
 
+    // ===== Admin : créer un utilisateur =====
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody com.plantverde.dto.request.CreateUserRequest request) {
+        return ResponseEntity.ok(userService.createUser(request));
+    }
+
     // ===== Admin : activer / désactiver un compte =====
     @PatchMapping("/{id}/toggle")
     @PreAuthorize("hasRole('ADMIN')")

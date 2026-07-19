@@ -18,11 +18,19 @@ export const adminGuard: CanActivateFn = () => {
   return false;
 };
 
-export const guestGuard: CanActivateFn = () => {
+export const guestGuard: CanActivateFn = (route, state) => {
   const auth = inject(AuthService);
   const router = inject(Router);
   if (!auth.isLoggedIn()) return true;
-  // Redirige selon le rôle
-  router.navigate(auth.isAdmin() ? ['/admin'] : ['/catalogue']);
+  
+  if (auth.isAdmin()) {
+    if (state.url.includes('register')) {
+      router.navigate(['/admin/users']);
+    } else {
+      router.navigate(['/admin']);
+    }
+  } else {
+    router.navigate(['/catalogue']);
+  }
   return false;
 };

@@ -17,6 +17,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     /**
      * Récupère l'entité User par email (réutilisé par les autres services métier).
@@ -49,6 +50,32 @@ public class UserService {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Utilisateur", id));
         user.setEnabled(!user.isEnabled());
+        return UserResponse.from(userRepository.save(user));
+    }
+
+    @Transactional
+    public UserResponse createUser(com.plantverde.dto.request.CreateUserRequest req) {
+        if (userRepository.existsByEmail(req.email())) {
+            throw new com.plantverde.exception.BusinessException("Un compte existe déjà avec cet email");
+        }
+        User.Role roleEnum;
+        try {
+            roleEnum = User.Role.valueOf(req.role());
+        } catch (IllegalArgumentException e) {
+            throw new com.plantverde.exception.BusinessException("Rôle invalide");
+        }
+
+        User user = User.builder()
+            .firstName(req.firstName())
+            .lastName(req.lastName())
+            .email(req.email())
+            .password(passwordEncoder.encode(req.password()))
+            .phone(req.phone())
+            .address(req.address())
+            .role(roleEnum)
+            .enabled(true)
+            .build();
+
         return UserResponse.from(userRepository.save(user));
     }
 }
