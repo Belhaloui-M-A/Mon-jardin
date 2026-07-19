@@ -1,0 +1,56 @@
+<div class="min-h-screen flex items-center justify-center px-4 py-20" [dir]="i18n.isRtl() ? 'rtl' : 'ltr'">
+  <div class="w-full max-w-[420px]">
+    <p-toast />
+    
+    <!-- Logo -->
+    <div class="text-center mb-9">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-500 mb-4 shadow-[0_8px_24px_rgba(34,197,94,0.35)]">
+        <span class="text-2xl">🌿</span>
+      </div>
+      <h1 class="text-3xl font-black tracking-tight text-white">PlantVerde</h1>
+      <p class="text-sm text-white/40 mt-1.5">{{ t.auth_login_sub }}</p>
+    </div>
+
+    <!-- Card -->
+    <div class="pv-glass-card p-6 sm:p-8 text-start">
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="mb-4">
+          <label class="pv-form-label">{{ t.auth_email }}</label>
+          <input pInputText formControlName="email" type="email" placeholder="vous@exemple.dz"
+                 class="w-full"
+                 [class.ng-invalid]="email.invalid && email.touched" [class.ng-dirty]="email.touched" />
+          @if (email.invalid && email.touched) {
+            <p class="pv-input-error-msg">
+              {{ i18n.currentLang() === 'ar' ? 'البريد الإلكتروني غير صالح' : i18n.currentLang() === 'en' ? 'Invalid email' : 'Email invalide' }}
+            </p>
+          }
+        </div>
+        <div class="mb-6">
+          <label class="pv-form-label">{{ t.auth_password }}</label>
+          <p-password formControlName="password" [feedback]="false" [toggleMask]="true"
+                      styleClass="w-full" inputStyleClass="w-full" placeholder="••••••••" />
+          @if (password.invalid && password.touched) {
+            <p class="pv-input-error-msg">
+              {{ i18n.currentLang() === 'ar' ? 'كلمة المرور مطلوبة' : i18n.currentLang() === 'en' ? 'Password required' : 'Mot de passe requis' }}
+            </p>
+          }
+        </div>
+        <button pButton type="submit" [loading]="loading" [label]="t.auth_login_btn" icon="pi pi-sign-in"
+                class="w-full py-3.5 rounded-xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 border-none shadow-[0_4px_16px_rgba(34,197,94,0.3)] transition-all hover:scale-[1.02]">
+        </button>
+      </form>
+
+      <!-- Comptes démo -->
+      <div class="mt-6 p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/15">
+        <p class="text-[10px] font-extrabold text-emerald-400 mb-2 uppercase tracking-wider">{{ t.auth_demo }}</p>
+        <p class="text-xs text-emerald-400/80 mb-1.5">👑 <strong>admin&#64;plantverde.dz</strong> / admin123</p>
+        <p class="text-xs text-emerald-400/80">🛒 <strong>karim&#64;test.dz</strong> / client123</p>
+      </div>
+
+      <p class="text-center text-xs text-white/40 mt-6">
+        {{ t.auth_no_account }}
+        <a routerLink="/auth/register" class="text-emerald-400 hover:underline font-bold ms-1">{{ t.nav_register }}</a>
+      </p>
+    </div>
+  </div>
+</div>

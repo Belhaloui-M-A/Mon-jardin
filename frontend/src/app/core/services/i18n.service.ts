@@ -1,0 +1,801 @@
+import { Injectable, signal, effect } from '@angular/core';
+
+export type Lang = 'fr' | 'en' | 'ar';
+
+export interface Translations {
+  // NAV
+  nav_home: string;
+  nav_catalogue: string;
+  nav_orders: string;
+  nav_wishlist: string;
+  nav_dashboard: string;
+  nav_plants: string;
+  nav_categories: string;
+  nav_login: string;
+  nav_register: string;
+  nav_profile: string;
+  nav_users: string;
+  nav_logout: string;
+  nav_cart: string;
+
+  // HOME
+  home_badge: string;
+  home_title1: string;
+  home_title2: string;
+  home_sub: string;
+  home_cta_explore: string;
+  home_cta_register: string;
+  home_stat_varieties: string;
+  home_stat_categories: string;
+  home_stat_delivery: string;
+  home_stat_satisfaction: string;
+  home_scroll: string;
+  home_collections: string;
+  home_collections_title: string;
+  home_collections_sub: string;
+  home_featured_label: string;
+  home_featured_title: string;
+  home_catalogue_label: string;
+  home_catalogue_title: string;
+  home_see_all: string;
+  home_cta_title: string;
+  home_cta_sub: string;
+  home_cta_btn: string;
+
+  // CATEGORIES
+  cat_interior: string;
+  cat_exterior: string;
+  cat_succulents: string;
+  cat_aromatic: string;
+  cat_tropical: string;
+
+  // CATALOGUE
+  catalogue_label: string;
+  catalogue_title: string;
+  catalogue_search: string;
+  catalogue_filters: string;
+  catalogue_category: string;
+  catalogue_all: string;
+  catalogue_max_price: string;
+  catalogue_stock_only: string;
+  catalogue_stock_label: string;
+  catalogue_sort_by: string;
+  catalogue_sort_new: string;
+  catalogue_sort_asc: string;
+  catalogue_sort_desc: string;
+  catalogue_sort_az: string;
+  catalogue_reset: string;
+  catalogue_results: string;
+  catalogue_plants: string;
+  catalogue_no_result: string;
+  catalogue_no_result_sub: string;
+  catalogue_reset_filters: string;
+  catalogue_limited: string;
+  catalogue_rupture: string;
+  catalogue_new: string;
+
+  // PLANT DETAIL
+  detail_category: string;
+  detail_in_stock: string;
+  detail_low_stock: string;
+  detail_out_stock: string;
+  detail_watering: string;
+  detail_light: string;
+  detail_add_cart: string;
+  detail_similar: string;
+  detail_toxic: string;
+  detail_size: string;
+
+  // DIFFICULTIES
+  diff_easy: string;
+  diff_medium: string;
+  diff_hard: string;
+
+  // CART
+  cart_label: string;
+  cart_title: string;
+  cart_empty: string;
+  cart_empty_sub: string;
+  cart_discover: string;
+  cart_unit: string;
+  cart_subtotal: string;
+  cart_delivery: string;
+  cart_included: string;
+  cart_total: string;
+  cart_checkout: string;
+  cart_continue: string;
+  cart_clear: string;
+  cart_summary: string;
+
+  // CHECKOUT
+  checkout_label: string;
+  checkout_title: string;
+  checkout_step1: string;
+  checkout_address: string;
+  checkout_city: string;
+  checkout_phone: string;
+  checkout_notes: string;
+  checkout_notes_ph: string;
+  checkout_step2: string;
+  checkout_confirm: string;
+  checkout_back: string;
+  checkout_delivery_incl: string;
+  checkout_success_title: string;
+  checkout_success_sub: string;
+  checkout_success_msg: string;
+  checkout_track: string;
+  checkout_continue: string;
+
+  // ORDERS
+  orders_label: string;
+  orders_title: string;
+  orders_order: string;
+  orders_empty: string;
+  orders_empty_sub: string;
+  orders_cancel: string;
+  orders_address: string;
+  orders_status_pending: string;
+  orders_status_confirmed: string;
+  orders_status_shipped: string;
+  orders_status_delivered: string;
+  orders_status_cancelled: string;
+
+  // WISHLIST
+  wishlist_label: string;
+  wishlist_title: string;
+  wishlist_empty: string;
+  wishlist_empty_sub: string;
+  wishlist_add_cart: string;
+
+  // PROFILE
+  profile_label: string;
+  profile_title: string;
+  profile_first_name: string;
+  profile_last_name: string;
+  profile_phone: string;
+  profile_email: string;
+  profile_address: string;
+  profile_save: string;
+  profile_my_orders: string;
+  profile_my_wishlist: string;
+  profile_modify: string;
+  profile_orders_sub: string;
+  profile_wishlist_sub: string;
+
+  // AUTH
+  auth_login_title: string;
+  auth_login_sub: string;
+  auth_email: string;
+  auth_password: string;
+  auth_login_btn: string;
+  auth_no_account: string;
+  auth_demo: string;
+  auth_register_title: string;
+  auth_register_sub: string;
+  auth_register_btn: string;
+  auth_have_account: string;
+  auth_password_min: string;
+
+  // ADMIN DASHBOARD
+  admin_label: string;
+  admin_dashboard: string;
+  admin_new_plant: string;
+  admin_revenue: string;
+  admin_revenue_month: string;
+  admin_pending_orders: string;
+  admin_to_process: string;
+  admin_clients: string;
+  admin_low_stock: string;
+  admin_low_stock_sub: string;
+  admin_sales_chart: string;
+  admin_top_sales: string;
+  admin_no_sales: string;
+  admin_alerts: string;
+  admin_manage_plants: string;
+  admin_crud: string;
+  admin_manage_orders: string;
+  admin_manage_statuses: string;
+  admin_manage_users: string;
+  admin_manage_accounts: string;
+  admin_quick_links: string;
+
+  // ADMIN PLANTS
+  admin_plants_label: string;
+  admin_plants_title: string;
+  admin_plants_count: string;
+  admin_plant_name: string;
+  admin_plant_species: string;
+  admin_plant_category: string;
+  admin_plant_price: string;
+  admin_plant_stock: string;
+  admin_plant_difficulty: string;
+  admin_plant_status: string;
+  admin_plant_actions: string;
+  admin_plant_active: string;
+  admin_plant_inactive: string;
+  admin_plant_new: string;
+  admin_plant_edit: string;
+  admin_plant_delete_confirm: string;
+  admin_plant_watering: string;
+  admin_plant_light: string;
+  admin_plant_size: string;
+  admin_plant_discount: string;
+  admin_plant_description: string;
+  admin_plant_image_url: string;
+  admin_cancel: string;
+  admin_create: string;
+  admin_edit_btn: string;
+
+  // ADMIN ORDERS
+  admin_orders_label: string;
+  admin_orders_title: string;
+  admin_orders_id: string;
+  admin_orders_client: string;
+  admin_orders_date: string;
+  admin_orders_total: string;
+  admin_orders_status: string;
+  admin_orders_change: string;
+  admin_orders_items: string;
+  admin_orders_delivery: string;
+  admin_orders_confirm_btn: string;
+  admin_orders_ship_btn: string;
+  admin_orders_deliver_btn: string;
+  admin_orders_cancel_btn: string;
+  admin_orders_none: string;
+
+  // ADMIN USERS
+  admin_users_label: string;
+  admin_users_title: string;
+  admin_users_count: string;
+  admin_users_user: string;
+  admin_users_email: string;
+  admin_users_phone: string;
+  admin_users_role: string;
+  admin_users_status: string;
+  admin_users_joined: string;
+  admin_users_actions: string;
+  admin_users_active: string;
+  admin_users_disabled: string;
+  admin_users_protected: string;
+  admin_users_none: string;
+
+
+  // REVIEWS
+  review_title: string;
+  review_sub: string;
+  review_write: string;
+  review_edit: string;
+  review_your_rating: string;
+  review_service: string;
+  review_delivery: string;
+  review_quality: string;
+  review_overall: string;
+  review_comment_ph: string;
+  review_submit: string;
+  review_update: string;
+  review_cancel: string;
+  review_success: string;
+  review_already: string;
+  review_login_required: string;
+  review_based_on: string;
+  review_ratings: string;
+  review_no_reviews: string;
+  review_verified: string;
+  review_label: string;
+  review_avg: string;
+  review_rating_1: string;
+  review_rating_2: string;
+  review_rating_3: string;
+  review_rating_4: string;
+  review_rating_5: string;
+  review_select_rating: string;
+  review_deleted: string;
+  page_prev: string;
+  page_next: string;
+  page_number: string;
+
+  // FOOTER
+  footer_nav: string;
+  footer_contact: string;
+  footer_delivery: string;
+  footer_payment: string;
+  footer_hours: string;
+  footer_rights: string;
+}
+
+const FR: Translations = {
+  nav_home: 'Accueil', nav_catalogue: 'Catalogue', nav_orders: 'Commandes',
+  nav_wishlist: 'Favoris ♥', nav_dashboard: 'Dashboard', nav_plants: 'Plantes',
+  nav_categories: 'Catégories',
+  nav_login: 'Connexion', nav_register: "S'inscrire", nav_profile: 'Mon profil',
+  nav_users: 'Utilisateurs', nav_logout: 'Déconnexion', nav_cart: 'Panier',
+
+  home_badge: 'Livraison partout en Algérie',
+  home_title1: 'La nature chez vous,', home_title2: 'à portée de clic',
+  home_sub: 'Des plantes soigneusement sélectionnées — livrées avec leurs conseils d\'entretien personnalisés.',
+  home_cta_explore: 'Explorer le catalogue', home_cta_register: 'Créer un compte',
+  home_stat_varieties: 'Variétés', home_stat_categories: 'Catégories',
+  home_stat_delivery: 'Livraison', home_stat_satisfaction: 'Satisfaction',
+  home_scroll: 'Défiler pour explorer',
+  home_collections: 'Collections', home_collections_title: 'Nos catégories',
+  home_collections_sub: 'Trouvez la plante parfaite pour chaque espace',
+  home_featured_label: 'Coup de cœur', home_featured_title: 'Plante du mois',
+  home_catalogue_label: 'Catalogue', home_catalogue_title: 'Nouveautés',
+  home_see_all: 'Voir tout',
+  home_cta_title: 'Prêt à verdir votre espace ?',
+  home_cta_sub: 'Créez votre compte gratuitement et profitez de conseils personnalisés.',
+  home_cta_btn: 'Commencer mes achats',
+
+  cat_interior: 'Intérieur', cat_exterior: 'Extérieur',
+  cat_succulents: 'Succulentes & Cactus', cat_aromatic: 'Aromatiques', cat_tropical: 'Tropicales',
+
+  catalogue_label: 'Boutique', catalogue_title: 'Catalogue',
+  catalogue_search: 'Rechercher une plante, espèce...',
+  catalogue_filters: 'Filtres', catalogue_category: 'Catégorie', catalogue_all: 'Toutes',
+  catalogue_max_price: 'Prix max', catalogue_stock_only: 'En stock uniquement',
+  catalogue_stock_label: 'Stock', catalogue_sort_by: 'Trier par',
+  catalogue_sort_new: 'Plus récent', catalogue_sort_asc: 'Prix croissant',
+  catalogue_sort_desc: 'Prix décroissant', catalogue_sort_az: 'Nom A–Z',
+  catalogue_reset: '↺ Réinitialiser', catalogue_results: 'plantes',
+  catalogue_plants: 'plantes trouvées',
+  catalogue_no_result: 'Aucune plante trouvée', catalogue_no_result_sub: 'Essayez de modifier vos filtres',
+  catalogue_reset_filters: 'Réinitialiser les filtres',
+  catalogue_limited: 'restants', catalogue_rupture: 'Rupture', catalogue_new: 'Nouveau',
+
+  detail_category: 'Catégorie', detail_in_stock: '✅ En stock',
+  detail_low_stock: '⚠️ Stock limité', detail_out_stock: '❌ Rupture',
+  detail_watering: 'Arrosage', detail_light: 'Lumière',
+  detail_add_cart: 'Ajouter au panier', detail_similar: 'Vous aimerez aussi',
+  detail_toxic: '⚠️ Toxique animaux', detail_size: 'Taille',
+
+  diff_easy: 'FACILE', diff_medium: 'MOYEN', diff_hard: 'DIFFICILE',
+
+  cart_label: 'Achat', cart_title: 'Mon panier', cart_empty: 'Panier vide',
+  cart_empty_sub: 'Ajoutez des plantes depuis notre catalogue',
+  cart_discover: 'Découvrir le catalogue', cart_unit: '/ unité',
+  cart_subtotal: 'Sous-total', cart_delivery: 'Livraison', cart_included: 'Incluse',
+  cart_total: 'Total', cart_checkout: 'Commander', cart_continue: '← Continuer mes achats',
+  cart_clear: 'Vider le panier', cart_summary: 'Récapitulatif',
+
+  checkout_label: 'Achat', checkout_title: 'Finaliser la commande',
+  checkout_step1: 'Adresse de livraison', checkout_address: 'Adresse *',
+  checkout_city: 'Ville / Wilaya *', checkout_phone: 'Téléphone *',
+  checkout_notes: 'Instructions (optionnel)',
+  checkout_notes_ph: 'Interphone, étage, instructions particulières...',
+  checkout_step2: 'Votre commande', checkout_confirm: 'Confirmer la commande',
+  checkout_back: '← Modifier le panier', checkout_delivery_incl: 'Livraison incluse',
+  checkout_success_title: 'Commande confirmée !',
+  checkout_success_sub: 'Vous serez contacté pour confirmer la livraison.',
+  checkout_success_msg: 'enregistrée avec succès.', checkout_track: 'Suivre ma commande',
+  checkout_continue: 'Continuer mes achats',
+
+  orders_label: 'Historique', orders_title: 'Mes commandes',
+  orders_order: 'Commande',
+  orders_empty: 'Aucune commande', orders_empty_sub: 'Vous n\'avez pas encore passé de commande',
+  orders_cancel: 'Annuler', orders_address: 'Adresse',
+  orders_status_pending: 'En attente', orders_status_confirmed: 'Confirmée',
+  orders_status_shipped: 'Expédiée', orders_status_delivered: 'Livrée',
+  orders_status_cancelled: 'Annulée',
+
+  wishlist_label: 'Favoris', wishlist_title: '❤️ Mes favoris',
+  wishlist_empty: 'Aucun favori', wishlist_empty_sub: 'Cliquez sur ♡ sur une fiche plante pour l\'ajouter ici',
+  wishlist_add_cart: 'Panier',
+
+  profile_label: 'Compte', profile_title: 'Mon profil',
+  profile_first_name: 'Prénom *', profile_last_name: 'Nom *',
+  profile_phone: 'Téléphone', profile_email: 'Email',
+  profile_address: 'Adresse de livraison', profile_save: 'Enregistrer',
+  profile_my_orders: 'Mes commandes', profile_my_wishlist: 'Mes favoris',
+  profile_modify: 'Modifier mes informations',
+  profile_orders_sub: 'Suivi & historique', profile_wishlist_sub: 'Plantes sauvegardées',
+
+  auth_login_title: 'PlantVerde', auth_login_sub: 'Connectez-vous à votre compte',
+  auth_email: 'Adresse email', auth_password: 'Mot de passe',
+  auth_login_btn: 'Se connecter', auth_no_account: 'Pas encore de compte ?',
+  auth_demo: 'Comptes de démonstration',
+  auth_register_title: 'Créer un compte', auth_register_sub: 'Rejoignez la communauté PlantVerde',
+  auth_register_btn: 'Créer mon compte', auth_have_account: 'Déjà un compte ?',
+  auth_password_min: 'Minimum 8 caractères',
+
+  admin_label: 'Administration', admin_dashboard: 'Dashboard', admin_new_plant: 'Nouvelle plante',
+  admin_revenue: 'Chiffre d\'affaires total', admin_revenue_month: 'ce mois',
+  admin_pending_orders: 'Commandes à traiter', admin_to_process: 'Prioritaires',
+  admin_clients: 'Clients inscrits', admin_low_stock: 'Stock faible',
+  admin_low_stock_sub: 'Moins de 5 unités', admin_sales_chart: 'Ventes — 30 derniers jours',
+  admin_top_sales: '🏆 Top ventes', admin_no_sales: 'Aucune vente',
+  admin_alerts: '⚠️ Alertes stock faible',
+  admin_manage_plants: 'Gestion Plantes', admin_crud: 'CRUD catalogue',
+  admin_manage_orders: 'Commandes', admin_manage_statuses: 'Gérer les statuts',
+  admin_manage_users: 'Utilisateurs', admin_manage_accounts: 'Gérer les comptes',
+  admin_quick_links: 'Accès rapide',
+
+  admin_plants_label: 'Administration', admin_plants_title: 'Gestion des plantes',
+  admin_plants_count: 'plantes au catalogue', admin_plant_name: 'Nom *',
+  admin_plant_species: 'Espèce', admin_plant_category: 'Catégorie *',
+  admin_plant_price: 'Prix (DA) *', admin_plant_stock: 'Stock *',
+  admin_plant_difficulty: 'Difficulté', admin_plant_status: 'Statut',
+  admin_plant_actions: 'Actions', admin_plant_active: 'Actif', admin_plant_inactive: 'Inactif',
+  admin_plant_new: 'Nouvelle plante', admin_plant_edit: 'Modifier la plante',
+  admin_plant_delete_confirm: 'Supprimer cette plante ?',
+  admin_plant_watering: 'Arrosage', admin_plant_light: 'Lumière',
+  admin_plant_size: 'Taille adulte', admin_plant_discount: 'Remise (%)',
+  admin_plant_description: 'Description', admin_plant_image_url: 'URL Image',
+  admin_cancel: 'Annuler', admin_create: 'Créer', admin_edit_btn: 'Modifier',
+
+  admin_orders_label: 'Administration', admin_orders_title: 'Gestion des commandes',
+  admin_orders_id: '#', admin_orders_client: 'Client', admin_orders_date: 'Date',
+  admin_orders_total: 'Total', admin_orders_status: 'Statut', admin_orders_change: 'Changer statut',
+  admin_orders_items: 'Articles', admin_orders_delivery: 'Livraison',
+  admin_orders_confirm_btn: 'Confirmer', admin_orders_ship_btn: 'Expédier',
+  admin_orders_deliver_btn: 'Marquer livré', admin_orders_cancel_btn: 'Annuler',
+  admin_orders_none: 'Aucune commande',
+
+  admin_users_label: 'Administration', admin_users_title: 'Gestion des utilisateurs',
+  admin_users_count: 'comptes enregistrés', admin_users_user: 'Utilisateur',
+  admin_users_email: 'Email', admin_users_phone: 'Téléphone', admin_users_role: 'Rôle',
+  admin_users_status: 'Statut', admin_users_joined: 'Inscription', admin_users_actions: 'Actions',
+  admin_users_active: 'Actif', admin_users_disabled: 'Désactivé',
+  admin_users_protected: 'Protégé', admin_users_none: 'Aucun utilisateur',
+
+  review_title: 'Évaluations clients', review_sub: 'Ce que pensent nos clients',
+  review_write: 'Évaluer le service', review_edit: 'Modifier mon avis',
+  review_your_rating: 'Votre note', review_service: 'Service client',
+  review_delivery: 'Livraison', review_quality: 'Qualité des plantes',
+  review_overall: 'Impression générale', review_comment_ph: 'Partagez votre expérience...',
+  review_submit: 'Publier mon avis', review_update: 'Mettre à jour',
+  review_cancel: 'Annuler', review_success: 'Merci pour votre avis !',
+  review_already: 'Vous avez déjà évalué ce service.',
+  review_login_required: 'Connectez-vous pour évaluer',
+  review_based_on: 'Basé sur', review_ratings: 'avis', review_no_reviews: 'Aucun avis pour l\'instant',
+  review_verified: 'Achat vérifié', review_label: '⭐ Avis', review_avg: 'Note moyenne',
+  review_rating_1: 'Très mauvais', review_rating_2: 'Mauvais', review_rating_3: 'Correct',
+  review_rating_4: 'Bien', review_rating_5: 'Excellent',
+  review_select_rating: 'Sélectionnez une note', review_deleted: 'Avis supprimé',
+  page_prev: '← Précédent', page_next: 'Suivant →', page_number: 'Page',
+  footer_nav: 'Navigation', footer_contact: 'Contact',
+  footer_delivery: '🌍 Algérie', footer_payment: '✅ Paiement livraison',
+  footer_hours: 'Lun–Sam : 8h–18h', footer_rights: 'Tous droits réservés.',
+};
+
+const EN: Translations = {
+  nav_home: 'Home', nav_catalogue: 'Shop', nav_orders: 'Orders',
+  nav_wishlist: 'Wishlist ♥', nav_dashboard: 'Dashboard', nav_plants: 'Plants',
+  nav_categories: 'Categories',
+  nav_login: 'Sign in', nav_register: 'Sign up', nav_profile: 'My Profile',
+  nav_users: 'Users', nav_logout: 'Sign out', nav_cart: 'Cart',
+
+  home_badge: 'Delivery across Algeria',
+  home_title1: 'Nature at home,', home_title2: 'one click away',
+  home_sub: 'Carefully selected plants — delivered with personalized care instructions.',
+  home_cta_explore: 'Explore the shop', home_cta_register: 'Create an account',
+  home_stat_varieties: 'Varieties', home_stat_categories: 'Categories',
+  home_stat_delivery: 'Delivery', home_stat_satisfaction: 'Satisfaction',
+  home_scroll: 'Scroll to explore',
+  home_collections: 'Collections', home_collections_title: 'Our categories',
+  home_collections_sub: 'Find the perfect plant for every space',
+  home_featured_label: 'Featured', home_featured_title: 'Plant of the month',
+  home_catalogue_label: 'Shop', home_catalogue_title: 'New arrivals',
+  home_see_all: 'See all',
+  home_cta_title: 'Ready to green your space?',
+  home_cta_sub: 'Create your free account and get personalized care tips.',
+  home_cta_btn: 'Start shopping',
+
+  cat_interior: 'Indoor', cat_exterior: 'Outdoor',
+  cat_succulents: 'Succulents & Cacti', cat_aromatic: 'Herbs', cat_tropical: 'Tropical',
+
+  catalogue_label: 'Shop', catalogue_title: 'Catalogue',
+  catalogue_search: 'Search for a plant, species...',
+  catalogue_filters: 'Filters', catalogue_category: 'Category', catalogue_all: 'All',
+  catalogue_max_price: 'Max price', catalogue_stock_only: 'In stock only',
+  catalogue_stock_label: 'Stock', catalogue_sort_by: 'Sort by',
+  catalogue_sort_new: 'Newest', catalogue_sort_asc: 'Price low–high',
+  catalogue_sort_desc: 'Price high–low', catalogue_sort_az: 'Name A–Z',
+  catalogue_reset: '↺ Reset', catalogue_results: 'plants',
+  catalogue_plants: 'plants found',
+  catalogue_no_result: 'No plants found', catalogue_no_result_sub: 'Try adjusting your filters',
+  catalogue_reset_filters: 'Reset filters',
+  catalogue_limited: 'remaining', catalogue_rupture: 'Out of stock', catalogue_new: 'New',
+
+  detail_category: 'Category', detail_in_stock: '✅ In stock',
+  detail_low_stock: '⚠️ Limited stock', detail_out_stock: '❌ Out of stock',
+  detail_watering: 'Watering', detail_light: 'Light',
+  detail_add_cart: 'Add to cart', detail_similar: 'You may also like',
+  detail_toxic: '⚠️ Toxic for animals', detail_size: 'Size',
+
+  diff_easy: 'EASY', diff_medium: 'MEDIUM', diff_hard: 'HARD',
+
+  cart_label: 'Shopping', cart_title: 'My cart', cart_empty: 'Your cart is empty',
+  cart_empty_sub: 'Add plants from our shop',
+  cart_discover: 'Explore the shop', cart_unit: '/ unit',
+  cart_subtotal: 'Subtotal', cart_delivery: 'Delivery', cart_included: 'Free',
+  cart_total: 'Total', cart_checkout: 'Checkout', cart_continue: '← Continue shopping',
+  cart_clear: 'Clear cart', cart_summary: 'Summary',
+
+  checkout_label: 'Checkout', checkout_title: 'Complete your order',
+  checkout_step1: 'Delivery address', checkout_address: 'Address *',
+  checkout_city: 'City / Province *', checkout_phone: 'Phone *',
+  checkout_notes: 'Instructions (optional)',
+  checkout_notes_ph: 'Doorbell code, floor, special instructions...',
+  checkout_step2: 'Your order', checkout_confirm: 'Place order',
+  checkout_back: '← Back to cart', checkout_delivery_incl: 'Free delivery',
+  checkout_success_title: 'Order confirmed!',
+  checkout_success_sub: 'You will be contacted to confirm delivery.',
+  checkout_success_msg: 'placed successfully.', checkout_track: 'Track my order',
+  checkout_continue: 'Continue shopping',
+
+  orders_label: 'History', orders_title: 'My orders',
+  orders_order: 'Order',
+  orders_empty: 'No orders yet', orders_empty_sub: 'You haven\'t placed any orders yet',
+  orders_cancel: 'Cancel', orders_address: 'Address',
+  orders_status_pending: 'Pending', orders_status_confirmed: 'Confirmed',
+  orders_status_shipped: 'Shipped', orders_status_delivered: 'Delivered',
+  orders_status_cancelled: 'Cancelled',
+
+  wishlist_label: 'Wishlist', wishlist_title: '❤️ My wishlist',
+  wishlist_empty: 'No favorites yet', wishlist_empty_sub: 'Click ♡ on a plant to save it here',
+  wishlist_add_cart: 'Add to cart',
+
+  profile_label: 'Account', profile_title: 'My profile',
+  profile_first_name: 'First name *', profile_last_name: 'Last name *',
+  profile_phone: 'Phone', profile_email: 'Email',
+  profile_address: 'Delivery address', profile_save: 'Save changes',
+  profile_my_orders: 'My orders', profile_my_wishlist: 'My wishlist',
+  profile_modify: 'Edit my information',
+  profile_orders_sub: 'Tracking & history', profile_wishlist_sub: 'Saved plants',
+
+  auth_login_title: 'PlantVerde', auth_login_sub: 'Sign in to your account',
+  auth_email: 'Email address', auth_password: 'Password',
+  auth_login_btn: 'Sign in', auth_no_account: 'No account yet?',
+  auth_demo: 'Demo accounts',
+  auth_register_title: 'Create an account', auth_register_sub: 'Join the PlantVerde community',
+  auth_register_btn: 'Create my account', auth_have_account: 'Already have an account?',
+  auth_password_min: 'Minimum 8 characters',
+
+  admin_label: 'Administration', admin_dashboard: 'Dashboard', admin_new_plant: 'New plant',
+  admin_revenue: 'Total revenue', admin_revenue_month: 'this month',
+  admin_pending_orders: 'Pending orders', admin_to_process: 'Priority',
+  admin_clients: 'Registered clients', admin_low_stock: 'Low stock',
+  admin_low_stock_sub: 'Less than 5 units', admin_sales_chart: 'Sales — last 30 days',
+  admin_top_sales: '🏆 Top sellers', admin_no_sales: 'No sales',
+  admin_alerts: '⚠️ Low stock alerts',
+  admin_manage_plants: 'Manage Plants', admin_crud: 'CRUD catalogue',
+  admin_manage_orders: 'Orders', admin_manage_statuses: 'Manage statuses',
+  admin_manage_users: 'Users', admin_manage_accounts: 'Manage accounts',
+  admin_quick_links: 'Quick links',
+
+  admin_plants_label: 'Administration', admin_plants_title: 'Plant management',
+  admin_plants_count: 'plants in catalogue', admin_plant_name: 'Name *',
+  admin_plant_species: 'Species', admin_plant_category: 'Category *',
+  admin_plant_price: 'Price (DA) *', admin_plant_stock: 'Stock *',
+  admin_plant_difficulty: 'Difficulty', admin_plant_status: 'Status',
+  admin_plant_actions: 'Actions', admin_plant_active: 'Active', admin_plant_inactive: 'Inactive',
+  admin_plant_new: 'New plant', admin_plant_edit: 'Edit plant',
+  admin_plant_delete_confirm: 'Delete this plant?',
+  admin_plant_watering: 'Watering', admin_plant_light: 'Light',
+  admin_plant_size: 'Adult size', admin_plant_discount: 'Discount (%)',
+  admin_plant_description: 'Description', admin_plant_image_url: 'Image URL',
+  admin_cancel: 'Cancel', admin_create: 'Create', admin_edit_btn: 'Update',
+
+  admin_orders_label: 'Administration', admin_orders_title: 'Order management',
+  admin_orders_id: '#', admin_orders_client: 'Client', admin_orders_date: 'Date',
+  admin_orders_total: 'Total', admin_orders_status: 'Status', admin_orders_change: 'Change status',
+  admin_orders_items: 'Items', admin_orders_delivery: 'Delivery',
+  admin_orders_confirm_btn: 'Confirm', admin_orders_ship_btn: 'Ship',
+  admin_orders_deliver_btn: 'Mark delivered', admin_orders_cancel_btn: 'Cancel',
+  admin_orders_none: 'No orders',
+
+  admin_users_label: 'Administration', admin_users_title: 'User management',
+  admin_users_count: 'registered accounts', admin_users_user: 'User',
+  admin_users_email: 'Email', admin_users_phone: 'Phone', admin_users_role: 'Role',
+  admin_users_status: 'Status', admin_users_joined: 'Joined', admin_users_actions: 'Actions',
+  admin_users_active: 'Active', admin_users_disabled: 'Disabled',
+  admin_users_protected: 'Protected', admin_users_none: 'No users',
+
+  review_title: 'Customer Reviews', review_sub: 'What our customers think',
+  review_write: 'Write a review', review_edit: 'Edit my review',
+  review_your_rating: 'Your rating', review_service: 'Customer service',
+  review_delivery: 'Delivery', review_quality: 'Plant quality',
+  review_overall: 'Overall impression', review_comment_ph: 'Share your experience...',
+  review_submit: 'Submit my review', review_update: 'Update',
+  review_cancel: 'Cancel', review_success: 'Thank you for your review!',
+  review_already: 'You have already reviewed this service.',
+  review_login_required: 'Log in to write a review',
+  review_based_on: 'Based on', review_ratings: 'reviews', review_no_reviews: 'No reviews yet',
+  review_verified: 'Verified purchase', review_label: '⭐ Reviews', review_avg: 'Average rating',
+  review_rating_1: 'Very bad', review_rating_2: 'Bad', review_rating_3: 'Average',
+  review_rating_4: 'Good', review_rating_5: 'Excellent',
+  review_select_rating: 'Select a rating', review_deleted: 'Review deleted',
+  page_prev: '← Previous', page_next: 'Next →', page_number: 'Page',
+  footer_nav: 'Navigation', footer_contact: 'Contact',
+  footer_delivery: '🌍 Algeria', footer_payment: '✅ Pay on delivery',
+  footer_hours: 'Mon–Sat: 8am–6pm', footer_rights: 'All rights reserved.',
+};
+
+const AR: Translations = {
+  nav_home: 'الرئيسية', nav_catalogue: 'المتجر', nav_orders: 'الطلبات',
+  nav_wishlist: 'المفضلة ♥', nav_dashboard: 'لوحة التحكم', nav_plants: 'النباتات',
+  nav_categories: 'الفئات',
+  nav_login: 'تسجيل الدخول', nav_register: 'إنشاء حساب', nav_profile: 'ملفي الشخصي',
+  nav_users: 'المستخدمون', nav_logout: 'تسجيل الخروج', nav_cart: 'السلة',
+
+  home_badge: 'التوصيل عبر الجزائر',
+  home_title1: 'الطبيعة في منزلك،', home_title2: 'بنقرة واحدة',
+  home_sub: 'نباتات مختارة بعناية — تُسلَّم مع نصائح العناية الشخصية.',
+  home_cta_explore: 'استكشاف المتجر', home_cta_register: 'إنشاء حساب',
+  home_stat_varieties: 'صنف', home_stat_categories: 'فئات',
+  home_stat_delivery: 'توصيل', home_stat_satisfaction: 'رضا',
+  home_scroll: 'اسحب للاستكشاف',
+  home_collections: 'المجموعات', home_collections_title: 'فئاتنا',
+  home_collections_sub: 'ابحث عن النبات المثالي لكل مكان',
+  home_featured_label: 'مميز', home_featured_title: 'نبات الشهر',
+  home_catalogue_label: 'المتجر', home_catalogue_title: 'وصل حديثًا',
+  home_see_all: 'عرض الكل',
+  home_cta_title: 'هل أنت مستعد لإضفاء الخضرة على مساحتك؟',
+  home_cta_sub: 'أنشئ حسابك مجانًا واحصل على نصائح عناية شخصية.',
+  home_cta_btn: 'ابدأ التسوق',
+
+  cat_interior: 'نباتات داخلية', cat_exterior: 'نباتات خارجية',
+  cat_succulents: 'نباتات صحراوية', cat_aromatic: 'نباتات عطرية', cat_tropical: 'نباتات استوائية',
+
+  catalogue_label: 'المتجر', catalogue_title: 'الكتالوج',
+  catalogue_search: 'ابحث عن نبات أو نوع...',
+  catalogue_filters: 'الفلاتر', catalogue_category: 'الفئة', catalogue_all: 'الكل',
+  catalogue_max_price: 'الحد الأقصى للسعر', catalogue_stock_only: 'المتوفر فقط',
+  catalogue_stock_label: 'المخزون', catalogue_sort_by: 'ترتيب حسب',
+  catalogue_sort_new: 'الأحدث', catalogue_sort_asc: 'السعر من الأقل',
+  catalogue_sort_desc: 'السعر من الأكثر', catalogue_sort_az: 'الاسم أ–ي',
+  catalogue_reset: '↺ إعادة تعيين', catalogue_results: 'نبات',
+  catalogue_plants: 'نبات موجود',
+  catalogue_no_result: 'لا توجد نباتات', catalogue_no_result_sub: 'حاول تعديل الفلاتر',
+  catalogue_reset_filters: 'إعادة تعيين الفلاتر',
+  catalogue_limited: 'متبقٍ', catalogue_rupture: 'نفد المخزون', catalogue_new: 'جديد',
+
+  detail_category: 'الفئة', detail_in_stock: '✅ متوفر',
+  detail_low_stock: '⚠️ مخزون محدود', detail_out_stock: '❌ نفد المخزون',
+  detail_watering: 'الري', detail_light: 'الضوء',
+  detail_add_cart: 'أضف إلى السلة', detail_similar: 'قد يعجبك أيضًا',
+  detail_toxic: '⚠️ سام للحيوانات', detail_size: 'الحجم',
+
+  diff_easy: 'سهل', diff_medium: 'متوسط', diff_hard: 'صعب',
+
+  cart_label: 'التسوق', cart_title: 'سلتي', cart_empty: 'السلة فارغة',
+  cart_empty_sub: 'أضف نباتات من متجرنا',
+  cart_discover: 'استكشاف المتجر', cart_unit: '/ وحدة',
+  cart_subtotal: 'المجموع الفرعي', cart_delivery: 'التوصيل', cart_included: 'مجاني',
+  cart_total: 'الإجمالي', cart_checkout: 'إتمام الطلب', cart_continue: 'مواصلة التسوق ←',
+  cart_clear: 'إفراغ السلة', cart_summary: 'ملخص الطلب',
+
+  checkout_label: 'الدفع', checkout_title: 'إتمام الطلب',
+  checkout_step1: 'عنوان التوصيل', checkout_address: 'العنوان *',
+  checkout_city: 'المدينة / الولاية *', checkout_phone: 'الهاتف *',
+  checkout_notes: 'تعليمات (اختياري)',
+  checkout_notes_ph: 'الدور، جرس الباب، تعليمات خاصة...',
+  checkout_step2: 'طلبك', checkout_confirm: 'تأكيد الطلب',
+  checkout_back: 'تعديل السلة ←', checkout_delivery_incl: 'توصيل مجاني',
+  checkout_success_title: 'تم تأكيد الطلب!',
+  checkout_success_sub: 'سيتم التواصل معك لتأكيد التوصيل.',
+  checkout_success_msg: 'تم بنجاح.', checkout_track: 'تتبع طلبي',
+  checkout_continue: 'مواصلة التسوق',
+
+  orders_label: 'السجل', orders_title: 'طلباتي',
+  orders_order: 'طلب',
+  orders_empty: 'لا توجد طلبات', orders_empty_sub: 'لم تقم بأي طلب بعد',
+  orders_cancel: 'إلغاء', orders_address: 'العنوان',
+  orders_status_pending: 'قيد الانتظار', orders_status_confirmed: 'تم التأكيد',
+  orders_status_shipped: 'تم الشحن', orders_status_delivered: 'تم التسليم',
+  orders_status_cancelled: 'ملغي',
+
+  wishlist_label: 'المفضلة', wishlist_title: '❤️ قائمة المفضلة',
+  wishlist_empty: 'لا توجد مفضلات', wishlist_empty_sub: 'انقر على ♡ في صفحة النبات لإضافته هنا',
+  wishlist_add_cart: 'أضف للسلة',
+
+  profile_label: 'الحساب', profile_title: 'ملفي الشخصي',
+  profile_first_name: 'الاسم الأول *', profile_last_name: 'اللقب *',
+  profile_phone: 'الهاتف', profile_email: 'البريد الإلكتروني',
+  profile_address: 'عنوان التوصيل', profile_save: 'حفظ التغييرات',
+  profile_my_orders: 'طلباتي', profile_my_wishlist: 'مفضلتي',
+  profile_modify: 'تعديل معلوماتي',
+  profile_orders_sub: 'التتبع والسجل', profile_wishlist_sub: 'النباتات المحفوظة',
+
+  auth_login_title: 'PlantVerde', auth_login_sub: 'سجّل دخولك إلى حسابك',
+  auth_email: 'البريد الإلكتروني', auth_password: 'كلمة المرور',
+  auth_login_btn: 'تسجيل الدخول', auth_no_account: 'ليس لديك حساب؟',
+  auth_demo: 'حسابات تجريبية',
+  auth_register_title: 'إنشاء حساب', auth_register_sub: 'انضم إلى مجتمع PlantVerde',
+  auth_register_btn: 'إنشاء حسابي', auth_have_account: 'لديك حساب بالفعل؟',
+  auth_password_min: 'الحد الأدنى 8 أحرف',
+
+  admin_label: 'الإدارة', admin_dashboard: 'لوحة التحكم', admin_new_plant: 'نبات جديد',
+  admin_revenue: 'إجمالي الإيرادات', admin_revenue_month: 'هذا الشهر',
+  admin_pending_orders: 'الطلبات المعلقة', admin_to_process: 'ذات أولوية',
+  admin_clients: 'العملاء المسجلون', admin_low_stock: 'مخزون منخفض',
+  admin_low_stock_sub: 'أقل من 5 وحدات', admin_sales_chart: 'المبيعات — آخر 30 يومًا',
+  admin_top_sales: '🏆 الأكثر مبيعًا', admin_no_sales: 'لا مبيعات',
+  admin_alerts: '⚠️ تنبيهات المخزون المنخفض',
+  admin_manage_plants: 'إدارة النباتات', admin_crud: 'إضافة/تعديل/حذف',
+  admin_manage_orders: 'الطلبات', admin_manage_statuses: 'إدارة الحالات',
+  admin_manage_users: 'المستخدمون', admin_manage_accounts: 'إدارة الحسابات',
+  admin_quick_links: 'وصول سريع',
+
+  admin_plants_label: 'الإدارة', admin_plants_title: 'إدارة النباتات',
+  admin_plants_count: 'نبات في الكتالوج', admin_plant_name: 'الاسم *',
+  admin_plant_species: 'النوع', admin_plant_category: 'الفئة *',
+  admin_plant_price: 'السعر (دج) *', admin_plant_stock: 'المخزون *',
+  admin_plant_difficulty: 'الصعوبة', admin_plant_status: 'الحالة',
+  admin_plant_actions: 'الإجراءات', admin_plant_active: 'نشط', admin_plant_inactive: 'غير نشط',
+  admin_plant_new: 'نبات جديد', admin_plant_edit: 'تعديل النبات',
+  admin_plant_delete_confirm: 'حذف هذا النبات؟',
+  admin_plant_watering: 'الري', admin_plant_light: 'الضوء',
+  admin_plant_size: 'الحجم البالغ', admin_plant_discount: 'الخصم (%)',
+  admin_plant_description: 'الوصف', admin_plant_image_url: 'رابط الصورة',
+  admin_cancel: 'إلغاء', admin_create: 'إنشاء', admin_edit_btn: 'تحديث',
+
+  admin_orders_label: 'الإدارة', admin_orders_title: 'إدارة الطلبات',
+  admin_orders_id: '#', admin_orders_client: 'العميل', admin_orders_date: 'التاريخ',
+  admin_orders_total: 'الإجمالي', admin_orders_status: 'الحالة', admin_orders_change: 'تغيير الحالة',
+  admin_orders_items: 'المنتجات', admin_orders_delivery: 'التوصيل',
+  admin_orders_confirm_btn: 'تأكيد', admin_orders_ship_btn: 'شحن',
+  admin_orders_deliver_btn: 'تسليم', admin_orders_cancel_btn: 'إلغاء',
+  admin_orders_none: 'لا توجد طلبات',
+
+  admin_users_label: 'الإدارة', admin_users_title: 'إدارة المستخدمين',
+  admin_users_count: 'حساب مسجل', admin_users_user: 'المستخدم',
+  admin_users_email: 'البريد', admin_users_phone: 'الهاتف', admin_users_role: 'الدور',
+  admin_users_status: 'الحالة', admin_users_joined: 'تاريخ الانضمام', admin_users_actions: 'الإجراءات',
+  admin_users_active: 'نشط', admin_users_disabled: 'معطّل',
+  admin_users_protected: 'محمي', admin_users_none: 'لا مستخدمين',
+
+  review_title: 'تقييمات العملاء', review_sub: 'ماذا يقول عملاؤنا',
+  review_write: 'تقييم الخدمة', review_edit: 'تعديل تقييمي',
+  review_your_rating: 'تقييمك', review_service: 'خدمة العملاء',
+  review_delivery: 'التوصيل', review_quality: 'جودة النباتات',
+  review_overall: 'الانطباع العام', review_comment_ph: 'شارك تجربتك...',
+  review_submit: 'نشر تقييمي', review_update: 'تحديث',
+  review_cancel: 'إلغاء', review_success: 'شكرًا على تقييمك!',
+  review_already: 'لقد قمت بتقييم هذه الخدمة مسبقًا.',
+  review_login_required: 'سجّل دخولك للتقييم',
+  review_based_on: 'بناءً على', review_ratings: 'تقييم', review_no_reviews: 'لا توجد تقييمات بعد',
+  review_verified: 'شراء موثق', review_label: '⭐ تقييمات', review_avg: 'متوسط التقييم',
+  review_rating_1: 'سيء جداً', review_rating_2: 'سيء', review_rating_3: 'مقبول',
+  review_rating_4: 'جيد', review_rating_5: 'ممتاز',
+  review_select_rating: 'اختر تقييماً', review_deleted: 'تم حذف التقييم',
+  page_prev: 'السابق ←', page_next: '→ التالي', page_number: 'صفحة',
+  footer_nav: 'التنقل', footer_contact: 'التواصل',
+  footer_delivery: '🌍 الجزائر', footer_payment: '✅ الدفع عند الاستلام',
+  footer_hours: 'الإثنين–السبت: 8ص–6م', footer_rights: 'جميع الحقوق محفوظة.',
+};
+
+const LANGS: Record<Lang, Translations> = { fr: FR, en: EN, ar: AR };
+
+@Injectable({ providedIn: 'root' })
+export class I18nService {
+  private readonly STORAGE_KEY = 'pv_lang';
+
+  currentLang = signal<Lang>(this.loadLang());
+  t = signal<Translations>(LANGS[this.loadLang()]);
+
+  isRtl = () => this.currentLang() === 'ar';
+
+  constructor() {
+    effect(() => {
+      const lang = this.currentLang();
+      this.t.set(LANGS[lang]);
+      document.documentElement.lang = lang;
+      document.documentElement.dir  = lang === 'ar' ? 'rtl' : 'ltr';
+      document.documentElement.style.setProperty(
+        '--pv-font',
+        lang === 'ar' ? "'Cairo', 'Noto Sans Arabic', sans-serif" : "'Plus Jakarta Sans', sans-serif"
+      );
+      localStorage.setItem(this.STORAGE_KEY, lang);
+    });
+  }
+
+  setLang(lang: Lang): void {
+    this.currentLang.set(lang);
+  }
+
+  private loadLang(): Lang {
+    const saved = localStorage.getItem(this.STORAGE_KEY) as Lang;
+    return saved && ['fr','en','ar'].includes(saved) ? saved : 'fr';
+  }
+}

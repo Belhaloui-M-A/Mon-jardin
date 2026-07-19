@@ -1,0 +1,227 @@
+<div class="pv-page-container" [dir]="i18n.isRtl() ? 'rtl' : 'ltr'">
+  <p-toast />
+
+  <!-- Titre page -->
+  <div class="mb-10 text-start">
+    <div class="pv-section-label">{{ t.catalogue_label }}</div>
+    <h1 class="pv-section-title">{{ t.catalogue_title }}</h1>
+    <p class="pv-section-sub">{{ totalRecords() }} {{ t.catalogue_plants }}</p>
+  </div>
+
+  <!-- Barre recherche -->
+  <div class="relative w-full max-w-lg mb-9">
+    <i class="pi pi-search absolute start-4 top-1/2 -translate-y-1/2 text-white/30 text-base"></i>
+    <input pInputText [value]="filterForm.get('search')!.value"
+           (input)="filterForm.get('search')!.setValue($any($event.target).value)"
+           [placeholder]="t.catalogue_search"
+           class="w-full ps-11 py-3 rounded-full bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-emerald-400 focus:shadow-[0_0_0_3px_rgba(74,222,128,0.1)] transition-all" />
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-6">
+
+    <!-- SIDEBAR FILTRES -->
+    <aside class="pv-sidebar-filter text-start">
+      <div class="pv-filter-title">{{ t.catalogue_filters }}</div>
+
+      <form [formGroup]="filterForm" class="space-y-6">
+
+        <!-- Catégorie -->
+        <div class="pv-filter-section">
+          <div class="pv-filter-label"><span class="pv-dot-sm"></span> {{ t.catalogue_category }}</div>
+          <p-dropdown formControlName="categoryId"
+                      [options]="categories()"
+                      optionLabel="name" optionValue="id"
+                      [placeholder]="t.catalogue_all" [showClear]="true"
+                      styleClass="w-full" />
+        </div>
+
+        <!-- Prix -->
+        <div class="pv-filter-section">
+          <div class="pv-filter-label">
+            <span class="pv-dot-sm"></span>
+            {{ t.catalogue_max_price }} {{ filterForm.get('maxPrice')!.value | number:'1.0-0' }} DA
+          </div>
+          <p-slider formControlName="maxPrice" [min]="0" [max]="20000" [step]="500" styleClass="w-full" />
+          <div class="flex justify-between text-[11px] text-white/30 mt-1.5">
+            <span>0 DA</span><span>20 000 DA</span>
+          </div>
+        </div>
+
+        <!-- En stock -->
+        <div class="pv-filter-section">
+          <div class="pv-filter-label"><span class="pv-dot-sm"></span> {{ t.catalogue_stock_label }}</div>
+          <div class="flex items-center justify-between gap-4">
+            <span class="text-sm text-white/70">{{ t.catalogue_stock_only }}</span>
+            <div class="pv-toggle" [class.on]="filterForm.get('inStock')!.value"
+                 (click)="filterForm.get('inStock')!.setValue(!filterForm.get('inStock')!.value)">
+            </div>
+          </div>
+        </div>
+
+        <!-- Tri -->
+        <div class="pv-filter-section">
+          <div class="pv-filter-label"><span class="pv-dot-sm"></span> {{ t.catalogue_sort_by }}</div>
+          <p-dropdown formControlName="sortBy"
+                      [options]="sortOptions"
+                      optionLabel="label" optionValue="value"
+                      styleClass="w-full" />
+        </div>
+
+        <!-- Reset -->
+        <button type="button" (click)="resetFilters()"
+                class="w-full py-2.5 rounded-xl border border-white/10 bg-transparent text-white/50 text-xs font-semibold cursor-pointer hover:bg-white/5 hover:text-white transition-all">
+          ↺ {{ t.catalogue_reset }}
+        </button>
+      </form>
+    </aside>
+
+    <!-- GRILLE PLANTES -->
+    <main class="text-start">
+      <!-- Barre tri/résultats -->
+      <div class="flex items-center justify-between mb-5">
+        <span class="text-sm text-white/50">
+          <strong class="text-white font-bold">{{ totalRecords() }}</strong> {{ i18n.currentLang() === 'ar' ? 'نباتات' : i18n.currentLang() === 'en' ? 'plants' : 'plantes' }}
+        </span>
+        <div class="flex gap-2">
+          <button pButton icon="pi pi-th-large" [text]="true" size="small"
+                  [style]="{'color': viewMode==='grid' ? '#34d399' : 'rgba(255,255,255,.4)' }"
+                  (click)="viewMode='grid'"></button>
+          <button pButton icon="pi pi-list" [text]="true" size="small"
+                  [style]="{'color': viewMode==='list' ? '#34d399' : 'rgba(255,255,255,.4)' }"
+                  (click)="viewMode='list'"></button>
+        </div>
+      </div>
+
+      @if (loading()) {
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+          @for (s of skeletons; track s) {
+            <div class="rounded-3xl overflow-hidden bg-white/[0.03] border border-white/5 p-4 flex flex-col gap-4">
+              <div class="h-44 rounded-2xl pv-shimmer"></div>
+              <div class="flex flex-col gap-2">
+                <div class="h-4.5 rounded-lg w-4/5 pv-shimmer"></div>
+                <div class="h-3 rounded-lg w-3/5 pv-shimmer"></div>
+                <div class="h-7 rounded-lg w-1/2 mt-2 pv-shimmer"></div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else if (plants().length === 0) {
+        <div class="text-center py-20 px-5 text-white/40">
+          <span class="text-6xl block mb-4">🔍</span>
+          <h3 class="text-lg font-bold mb-2 text-white/60">{{ t.catalogue_no_result }}</h3>
+          <p class="text-sm mb-6">{{ t.catalogue_no_result_sub }}</p>
+          <button pButton [label]="t.catalogue_reset_filters" icon="pi pi-refresh"
+                  (click)="resetFilters()" severity="secondary"></button>
+        </div>
+      } @else {
+        @if (viewMode === 'grid') {
+          <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+            @for (plant of plants(); track plant.id) {
+              <a [routerLink]="['/catalogue', plant.id]" class="pv-card">
+                @if (plant.discountPercent && plant.discountPercent > 0) {
+                  <div class="pv-badge pv-badge-promo">-{{ plant.discountPercent }}%</div>
+                }
+                @if (plant.stock < 5 && plant.stock > 0) {
+                  <div class="pv-badge bg-amber-500/15 text-amber-400 border border-amber-500/20"
+                       [class.start-auto]="!i18n.isRtl()"
+                       [class.end-3]="!i18n.isRtl()"
+                       [class.end-auto]="i18n.isRtl()"
+                       [class.start-3]="i18n.isRtl()">
+                    {{ plant.stock }} {{ t.catalogue_limited }}
+                  </div>
+                }
+                @if (plant.stock === 0) {
+                  <div class="absolute inset-0 bg-black/60 flex items-center justify-center z-10 rounded-[24px]">
+                    <span class="color-white/70 text-sm font-bold border border-white/20 px-4 py-1.5 rounded-full bg-black/40">{{ t.catalogue_rupture }}</span>
+                  </div>
+                }
+                <div class="pv-card-img">
+                  <div class="pv-card-glow"></div>
+                  <span class="pv-card-emoji">🪴</span>
+                </div>
+                <div class="pv-card-body">
+                  <div class="pv-card-cat">{{ plant.category?.name }}</div>
+                  <div class="pv-card-name text-white">{{ plant.name }}</div>
+                  <div class="pv-card-species text-white/50">{{ plant.species }}</div>
+                  <div class="pv-card-footer">
+                    <div>
+                      @if (plant.discountPercent && plant.discountPercent > 0) {
+                        <span class="text-[11px] text-white/30 line-through">{{ plant.price | number:'1.0-0' }} DA</span><br>
+                      }
+                      <span class="pv-card-price text-emerald-400">{{ getFinalPrice(plant) | number:'1.0-0' }} DA</span>
+                    </div>
+                    <span class="pv-tag-diff"
+                          [class.pv-tag-facile]="plant.difficultyLevel === 'FACILE'"
+                          [class.pv-tag-moyen]="plant.difficultyLevel === 'MOYEN'"
+                          [class.pv-diff-difficile]="plant.difficultyLevel === 'DIFFICILE'">
+                      {{ plant.difficultyLevel === 'FACILE' ? t.diff_easy : plant.difficultyLevel === 'MOYEN' ? t.diff_medium : t.diff_hard }}
+                    </span>
+                  </div>
+                </div>
+                @if (!authService.isAdmin() && plant.stock > 0) {
+                  <button class="pv-card-add" (click)="addToCart(plant, $event)">+</button>
+                }
+              </a>
+            }
+          </div>
+        } @else {
+          <!-- Vue liste -->
+          <div class="flex flex-col gap-2.5">
+            @for (plant of plants(); track plant.id) {
+              <a [routerLink]="['/catalogue', plant.id]" class="plant-list-item">
+                <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-3xl shrink-0">🪴</div>
+                <div class="flex-1 min-w-0">
+                  <div class="font-bold text-sm text-white">{{ plant.name }}</div>
+                  <div class="text-[11px] text-white/50 italic">{{ plant.species }}</div>
+                  <div class="text-[11px] text-emerald-400 mt-0.5">{{ plant.category?.name }}</div>
+                </div>
+                <span class="pv-tag-diff"
+                      [class.pv-tag-facile]="plant.difficultyLevel === 'FACILE'"
+                      [class.pv-tag-moyen]="plant.difficultyLevel === 'MOYEN'"
+                      [class.pv-diff-difficile]="plant.difficultyLevel === 'DIFFICILE'">
+                  {{ plant.difficultyLevel === 'FACILE' ? t.diff_easy : plant.difficultyLevel === 'MOYEN' ? t.diff_medium : t.diff_hard }}
+                </span>
+                <span class="text-base font-extrabold text-emerald-400 shrink-0 whitespace-nowrap">
+                  {{ getFinalPrice(plant) | number:'1.0-0' }} DA
+                </span>
+              </a>
+            }
+          </div>
+        }
+
+        @if (totalRecords() > pageSize) {
+          <div class="mt-8">
+            <p-paginator [rows]="pageSize" [totalRecords]="totalRecords()"
+                         [rowsPerPageOptions]="[12,24,48]"
+                         (onPageChange)="onPageChange($event)" />
+          </div>
+        }
+      }
+    </main>
+  </div>
+</div>
+
+<style>
+  .plant-list-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    border-radius: 16px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.07);
+    transition: all .2s;
+    cursor: pointer;
+    text-decoration: none;
+    color: #fff;
+  }
+  .plant-list-item:hover {
+    border-color: rgba(74,222,128,.35);
+    background: rgba(74,222,128,.05);
+    transform: translateX(6px);
+  }
+  [dir="rtl"] .plant-list-item:hover {
+    transform: translateX(-6px);
+  }
+</style>
+

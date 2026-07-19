@@ -1,0 +1,153 @@
+<div class="pv-page-container" [dir]="i18n.isRtl() ? 'rtl' : 'ltr'">
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 text-start">
+    <div>
+      <div class="pv-section-label">{{ t.admin_label }}</div>
+      <h1 class="pv-section-title">{{ t.admin_dashboard }}</h1>
+    </div>
+    <div>
+      <a routerLink="/admin/plants" class="pv-btn-primary px-5 py-2.5 text-xs">
+        <i class="pi pi-plus me-1"></i> {{ t.admin_new_plant }}
+      </a>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="h-28 rounded-2xl bg-white/[0.04] pv-shimmer"></div>
+      }
+    </div>
+  } @else if (stats()) {
+
+    <!-- KPIs -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 text-start">
+      <div class="pv-kpi-card">
+        <div class="pv-kpi-icon bg-emerald-500/10">💰</div>
+        <div class="pv-kpi-value text-white">{{ stats()!.totalRevenue | number:'1.0-0' }} DA</div>
+        <div class="pv-kpi-label">{{ t.admin_revenue }}</div>
+        <div class="pv-kpi-trend text-emerald-400">↑ {{ stats()!.revenueThisMonth | number:'1.0-0' }} DA {{ t.admin_revenue_month }}</div>
+      </div>
+      <div class="pv-kpi-card">
+        <div class="pv-kpi-icon bg-amber-500/10">📦</div>
+        <div class="pv-kpi-value text-amber-400">{{ stats()!.pendingOrders }}</div>
+        <div class="pv-kpi-label">{{ t.admin_pending_orders }}</div>
+        <div class="pv-kpi-trend text-amber-400">⚡ {{ t.admin_to_process }}</div>
+      </div>
+      <div class="pv-kpi-card">
+        <div class="pv-kpi-icon bg-sky-500/10">👤</div>
+        <div class="pv-kpi-value text-sky-400">{{ stats()!.totalClients }}</div>
+        <div class="pv-kpi-label">{{ t.admin_clients }}</div>
+        <div class="pv-kpi-trend text-sky-400">
+          {{ i18n.currentLang() === 'ar' ? 'الحسابات النشطة' : i18n.currentLang() === 'en' ? 'Active accounts' : 'Comptes actifs' }}
+        </div>
+      </div>
+      <div class="pv-kpi-card">
+        <div class="pv-kpi-icon bg-rose-500/10">⚠️</div>
+        <div class="pv-kpi-value text-rose-400">{{ stats()!.lowStockCount }}</div>
+        <div class="pv-kpi-label">{{ t.admin_low_stock }}</div>
+        <div class="pv-kpi-trend text-rose-400">{{ t.admin_low_stock_sub }}</div>
+      </div>
+    </div>
+
+    <!-- Graphique + Top ventes -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 text-start">
+      <!-- Graphique ventes -->
+      <div class="lg:col-span-2 bg-white/[0.03] border border-white/5 rounded-3xl p-6">
+        <div class="text-xs font-bold text-white/40 uppercase tracking-wider mb-5">
+          {{ t.admin_sales_chart }}
+        </div>
+        @if (chartData) {
+          <div class="h-[220px]">
+            <p-chart type="line" [data]="chartData" [options]="chartOptions" height="220" />
+          </div>
+        } @else {
+          <div class="h-[220px] flex items-center justify-center text-white/35 text-sm">
+            {{ i18n.currentLang() === 'ar' ? 'لا توجد بيانات متاحة' : i18n.currentLang() === 'en' ? 'No data available' : 'Aucune donnée disponible' }}
+          </div>
+        }
+      </div>
+
+      <!-- Top plantes -->
+      <div class="bg-white/[0.03] border border-white/5 rounded-3xl p-6">
+        <div class="text-xs font-bold text-white/40 uppercase tracking-wider mb-5">
+          {{ t.admin_top_sales }}
+        </div>
+        <div class="flex flex-col gap-4">
+          @for (p of stats()!.topSellingPlants; track p.name; let i = $index) {
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-bold text-white/20 w-4 text-center shrink-0">{{ i + 1 }}</span>
+              <div class="flex-1 min-w-0">
+                <span class="text-xs text-white/70 block truncate font-medium mb-1">{{ p.name }}</span>
+                <div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                  <div class="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full"
+                       [style.width]="(p.totalSold / (stats()!.topSellingPlants[0].totalSold || 1) * 100) + '%'"></div>
+                </div>
+              </div>
+              <span class="text-xs font-bold text-emerald-400 shrink-0 font-mono">{{ p.totalSold }}</span>
+            </div>
+          }
+          @if (stats()!.topSellingPlants.length === 0) {
+            <p class="text-xs text-white/30">{{ t.admin_no_sales }}</p>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Stock faible -->
+    @if (stats()!.lowStockPlants.length > 0) {
+      <div class="bg-amber-500/[0.02] border border-amber-500/10 rounded-3xl p-5 mb-8 text-start animate-fadeup">
+        <div class="text-xs font-bold text-amber-500 uppercase tracking-wider mb-4">
+          {{ t.admin_alerts }}
+        </div>
+        <div class="flex flex-wrap gap-2">
+          @for (p of stats()!.lowStockPlants; track p.id) {
+            <a [routerLink]="['/admin/plants']"
+               class="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-amber-500/5 border border-amber-500/10 text-white/80 no-underline transition-colors hover:bg-amber-500/10 hover:border-amber-500/20 shrink-0">
+              <span class="text-xs font-bold">{{ p.name }}</span>
+              <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border"
+                    [ngClass]="p.stock === 0 ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'">
+                {{ p.stock }} {{ i18n.currentLang() === 'ar' ? 'وحدات' : i18n.currentLang() === 'en' ? 'units' : 'unités' }}
+              </span>
+            </a>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Liens rapides admin -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-start">
+      <a routerLink="/admin/plants" class="admin-quick-link">
+        <div class="admin-ql-icon bg-emerald-500/10 shrink-0">
+          <i class="pi pi-th-large text-emerald-400 text-lg"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-bold text-sm text-white truncate">{{ t.admin_manage_plants }}</div>
+          <div class="text-xs text-white/40 mt-1 truncate">{{ t.admin_crud }}</div>
+        </div>
+        <i class="pi" [class.pi-arrow-right]="!i18n.isRtl()" [class.pi-arrow-left]="i18n.isRtl()" style="font-size:12px;color:rgba(255,255,255,.25)" [class.ms-auto]="true"></i>
+      </a>
+      <a routerLink="/admin/orders" class="admin-quick-link">
+        <div class="admin-ql-icon bg-amber-500/10 shrink-0">
+          <i class="pi pi-inbox text-amber-400 text-lg"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-bold text-sm text-white truncate">{{ t.admin_manage_orders }}</div>
+          <div class="text-xs text-white/40 mt-1 truncate">{{ t.admin_manage_statuses }}</div>
+        </div>
+        <i class="pi" [class.pi-arrow-right]="!i18n.isRtl()" [class.pi-arrow-left]="i18n.isRtl()" style="font-size:12px;color:rgba(255,255,255,.25)" [class.ms-auto]="true"></i>
+      </a>
+      <a routerLink="/admin/users" class="admin-quick-link">
+        <div class="admin-ql-icon bg-sky-500/10 shrink-0">
+          <i class="pi pi-users text-sky-400 text-lg"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="font-bold text-sm text-white truncate">{{ t.admin_manage_users }}</div>
+          <div class="text-xs text-white/40 mt-1 truncate">{{ t.admin_manage_accounts }}</div>
+        </div>
+        <i class="pi" [class.pi-arrow-right]="!i18n.isRtl()" [class.pi-arrow-left]="i18n.isRtl()" style="font-size:12px;color:rgba(255,255,255,.25)" [class.ms-auto]="true"></i>
+      </a>
+    </div>
+  }
+</div>

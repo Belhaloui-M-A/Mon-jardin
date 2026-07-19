@@ -1,0 +1,63 @@
+<div class="pv-page-container" [dir]="i18n.isRtl() ? 'rtl' : 'ltr'">
+  <p-toast />
+
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 text-start">
+    <div>
+      <div class="pv-section-label">{{ t.wishlist_label }}</div>
+      <h1 class="pv-section-title">{{ t.wishlist_title }}</h1>
+    </div>
+    <span class="text-sm text-white/40 font-medium shrink-0">{{ items().length }} {{ t.catalogue_results }}</span>
+  </div>
+
+  @if (items().length === 0) {
+    <div class="text-center py-20 px-4">
+      <span class="text-6xl block mb-6">🌱</span>
+      <h3 class="text-xl font-bold text-white/50 mb-2">{{ t.wishlist_empty }}</h3>
+      <p class="text-sm text-white/30 mb-8">{{ t.wishlist_empty_sub }}</p>
+      <a routerLink="/catalogue" class="pv-btn-primary">
+        <i class="pi pi-search me-2"></i> {{ t.cart_discover }}
+      </a>
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 text-start">
+      @for (item of items(); track item.id) {
+        <div class="pv-card">
+          <div class="pv-card-img">
+            <div class="pv-card-glow"></div>
+            <span class="pv-card-emoji">🪴</span>
+          </div>
+          <div class="pv-card-body flex flex-col justify-between h-[180px]">
+            <div>
+              <div class="pv-card-cat">{{ item.plant.category?.name }}</div>
+              <a [routerLink]="['/catalogue', item.plant.id]"
+                 class="block font-bold text-base text-white no-underline mb-1 transition-colors hover:text-emerald-400 truncate">
+                {{ item.plant.name }}
+              </a>
+              <div class="pv-card-species truncate">{{ item.plant.species }}</div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-4">
+                <span class="pv-card-price">{{ item.plant.price | number:'1.0-0' }} DA</span>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full border shrink-0"
+                      [ngClass]="item.plant.stock > 0 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border-rose-500/20'">
+                  {{ item.plant.stock > 0 ? t.detail_in_stock : t.catalogue_rupture }}
+                </span>
+              </div>
+              <div class="flex gap-2">
+                <button pButton icon="pi pi-shopping-cart" size="small" [label]="t.wishlist_add_cart"
+                        [disabled]="item.plant.stock === 0"
+                        (click)="addToCart(item)"
+                        class="flex-1 rounded-xl py-2 px-3 text-xs font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 border-none transition-all hover:scale-[1.02]">
+                </button>
+                <button pButton icon="pi pi-heart-fill" size="small" severity="danger" [outlined]="true"
+                        (click)="remove(item)"
+                        class="rounded-xl w-9 p-0 shrink-0 border-rose-500/35 hover:bg-rose-500/10">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,154 @@
+<div class="pv-page-container" [dir]="i18n.isRtl() ? 'rtl' : 'ltr'">
+  <p-toast />
+  <p-confirmDialog />
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 text-start">
+    <div>
+      <div class="pv-section-label">{{ t.admin_label }}</div>
+      <h1 class="pv-section-title">{{ t.admin_plants_title }}</h1>
+      <p class="text-sm text-white/40 mt-1.5">{{ plants().length }} {{ t.admin_plants_count }}</p>
+    </div>
+    <div>
+      <button pButton icon="pi pi-plus" [label]="t.admin_new_plant" (click)="openNew()"
+              class="px-5 py-2.5 rounded-xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 border-none shadow-[0_4px_16px_rgba(34,197,94,0.3)] transition-all hover:scale-[1.02]">
+      </button>
+    </div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="pv-glass-card p-4 sm:p-6 overflow-hidden text-start">
+    <p-table [value]="plants()" [loading]="loading()" [paginator]="true" [rows]="15"
+             styleClass="p-datatable-sm" [rowHover]="true">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="text-start">{{ t.admin_plant_name }}</th>
+          <th class="text-start">{{ t.admin_plant_category }}</th>
+          <th pSortableColumn="price" class="text-start">{{ t.admin_plant_price }} <p-sortIcon field="price" /></th>
+          <th pSortableColumn="stock" class="text-start">{{ t.admin_plant_stock }} <p-sortIcon field="stock" /></th>
+          <th class="text-start">{{ t.admin_plant_difficulty }}</th>
+          <th class="text-start">{{ t.admin_plant_status }}</th>
+          <th class="text-end">{{ t.admin_plant_actions }}</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-plant>
+        <tr>
+          <td>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-center text-xl shrink-0">🪴</div>
+              <div class="min-w-0">
+                <p class="font-bold text-sm text-white truncate">{{ plant.name }}</p>
+                <p class="text-xs text-white/35 italic truncate">{{ plant.species }}</p>
+              </div>
+            </div>
+          </td>
+          <td><span class="text-xs text-white/60 font-medium">{{ plant.category?.name }}</span></td>
+          <td>
+            <div>
+              @if (plant.discountPercent > 0) {
+                <p class="text-[10px] text-white/35 line-through font-mono">{{ plant.price | number:'1.0-0' }} DA</p>
+              }
+              <p class="font-bold text-xs text-emerald-400 font-mono">
+                {{ (plant.discountPercent > 0 ? plant.price * (1 - plant.discountPercent / 100) : plant.price) | number:'1.0-0' }} DA
+              </p>
+            </div>
+          </td>
+          <td>
+            <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border font-mono"
+                  [ngClass]="plant.stock === 0 ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : (plant.stock > 0 && plant.stock < 5 ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20')">
+              {{ plant.stock }}
+            </span>
+          </td>
+          <td>
+            <span class="pv-tag-diff"
+                  [class.pv-tag-facile]="plant.difficultyLevel === 'FACILE'"
+                  [class.pv-tag-moyen]="plant.difficultyLevel === 'MOYEN'"
+                  [class.pv-diff-difficile]="plant.difficultyLevel === 'DIFFICILE'">
+              {{ plant.difficultyLevel === 'FACILE' ? t.diff_easy : plant.difficultyLevel === 'MOYEN' ? t.diff_medium : t.diff_hard }}
+            </span>
+          </td>
+          <td>
+            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full border"
+                  [ngClass]="plant.active ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-white/5 text-white/40 border-white/10'">
+              {{ plant.active ? t.admin_plant_active : t.admin_plant_inactive }}
+            </span>
+          </td>
+          <td>
+            <div class="flex items-center justify-end gap-1.5">
+              <button pButton icon="pi pi-pencil" size="small" [text]="true" (click)="openEdit(plant)"
+                      class="text-emerald-400 hover:bg-emerald-400/10 rounded-lg w-8 h-8 p-0 shrink-0"></button>
+              <button pButton icon="pi pi-trash" size="small" [text]="true" severity="danger"
+                      (click)="confirmDelete(plant)"
+                      class="text-rose-400 hover:bg-rose-400/10 rounded-lg w-8 h-8 p-0 shrink-0"></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Dialog Créer/Modifier -->
+  <p-dialog [header]="editingPlant() ? t.admin_plant_edit : t.admin_plant_new"
+            [(visible)]="dialogVisible" [modal]="true" [style]="{width:'700px'}"
+            [draggable]="false" [resizable]="false">
+    <form [formGroup]="form" class="pv-form-grid pt-2 text-start">
+      <div class="pv-form-span-2">
+        <label class="pv-form-label">{{ t.admin_plant_name }}</label>
+        <input pInputText formControlName="name" class="w-full" placeholder="Monstera Deliciosa" />
+      </div>
+      <div>
+        <label class="pv-form-label">{{ t.admin_plant_species }}</label>
+        <input pInputText formControlName="species" class="w-full" placeholder="Monstera deliciosa" />
+      </div>
+      <div>
+        <label class="pv-form-label">{{ t.admin_plant_category }}</label>
+        <p-dropdown formControlName="categoryId" [options]="categories()" optionLabel="name" optionValue="id"
+                    [placeholder]="i18n.currentLang() === 'ar' ? 'اختر' : i18n.currentLang() === 'en' ? 'Select' : 'Sélectionner'" styleClass="w-full" />
+      </div>
+      <div>
+        <label class="pv-form-label">{{ t.admin_plant_price }}</label>
+        <p-inputNumber formControlName="price" [min]="0" styleClass="w-full" suffix=" DA" />
+      </div>
+      <div>
+        <label class="pv-form-label">{{ t.admin_plant_stock }}</label>
+        <p-inputNumber formControlName="stock" [min]="0" styleClass="w-full" />
+      </div>
+      <div class="pv-form-span-2">
+        <label class="pv-form-label">{{ t.admin_plant_description }}</label>
+        <textarea pInputTextarea formControlName="description" rows="2" class="w-full resize-none"></textarea>
+      </div>
+      <div>
+        <label class="pv-form-label">{{ t.admin_plant_image_url }}</label>
+        <input pInputText formControlName="imageUrl" class="w-full" placeholder="https://..." />
+      </div>
+      <div>
+        <label class="pv-form-label">{{ t.admin_plant_difficulty }}</label>
+        <p-dropdown formControlName="difficultyLevel" [options]="difficultyOptions"
+                    optionLabel="label" optionValue="value" styleClass="w-full" />
+      </div>
+      <div>
+        <label class="pv-form-label">{{ t.admin_plant_watering }}</label>
+        <input pInputText formControlName="wateringFrequency" class="w-full" placeholder="1 fois/semaine" />
+      </div>
+      <div>
+        <label class="pv-form-label">{{ t.admin_plant_light }}</label>
+        <input pInputText formControlName="lightRequirement" class="w-full" placeholder="Lumière indirecte" />
+      </div>
+      <div>
+        <label class="pv-form-label">{{ t.admin_plant_size }}</label>
+        <input pInputText formControlName="adultSize" class="w-full" placeholder="50cm – 1m" />
+      </div>
+      <div>
+        <label class="pv-form-label">{{ t.admin_plant_discount }}</label>
+        <p-inputNumber formControlName="discountPercent" [min]="0" [max]="100" styleClass="w-full" suffix="%" />
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <button pButton [label]="t.admin_cancel" severity="secondary" [outlined]="true" (click)="dialogVisible.set(false)"
+              class="rounded-xl px-5 py-2.5 text-sm"></button>
+      <button pButton [label]="editingPlant() ? t.admin_edit_btn : t.admin_create" icon="pi pi-check"
+              [loading]="saving()" (click)="save()"
+              class="rounded-xl px-6 py-2.5 text-sm font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 border-none transition-all hover:scale-[1.02]"></button>
+    </ng-template>
+  </p-dialog>
+</div>

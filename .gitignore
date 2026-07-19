@@ -1,0 +1,23 @@
+# ===== Secrets / environnement =====
+.env
+*.env
+!.env.example
+
+# ===== Backend (Java / Maven) =====
+backend/target/
+*.class
+*.jar
+*.log
+
+# ===== Frontend (Angular / Node) =====
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+npm-debug.log*
+
+# ===== IDE / OS =====
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db

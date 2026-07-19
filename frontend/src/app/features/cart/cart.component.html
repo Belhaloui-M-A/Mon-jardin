@@ -1,0 +1,122 @@
+<div class="pv-page-container" [dir]="i18n.isRtl() ? 'rtl' : 'ltr'">
+  <p-toast />
+
+  <div class="mb-9 text-start">
+    <div class="pv-section-label">{{ t.cart_label }}</div>
+    <h1 class="pv-section-title">{{ t.cart_title }}</h1>
+  </div>
+
+  @if (cart.items().length === 0) {
+    <div class="text-center py-20 px-5 text-white/50">
+      <span class="text-7xl block mb-5">🛒</span>
+      <h3 class="text-xl font-bold mb-2 text-white/70">{{ t.cart_empty }}</h3>
+      <p class="text-sm mb-8 text-white/40">{{ t.cart_empty_sub }}</p>
+      <a routerLink="/catalogue" class="pv-btn-primary">
+        <i class="pi pi-search"></i> {{ t.cart_discover }}
+      </a>
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 text-start">
+
+      <!-- Articles -->
+      <div class="flex flex-col gap-3">
+        @for (item of cart.items(); track item.id) {
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 bg-white/5 border border-white/10 rounded-2xl transition-all hover:border-emerald-400/30">
+            <!-- Image -->
+            <div class="w-16 h-16 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-3xl shrink-0 select-none">🪴</div>
+
+            <!-- Infos -->
+            <div class="flex-1 min-w-0">
+              <a [routerLink]="['/catalogue', item.plant.id]"
+                 class="font-bold text-base text-white no-underline transition-colors hover:text-emerald-400 block truncate">
+                {{ item.plant.name }}
+              </a>
+              <p class="text-xs text-white/40 mt-1">{{ item.plant.category?.name }}</p>
+            </div>
+
+            <!-- Quantité + Prix + Supprimer row -->
+            <div class="flex items-center justify-between w-full sm:w-auto gap-4 sm:gap-6 mt-3 sm:mt-0">
+              <!-- Quantité controls -->
+              <div class="flex items-center border border-white/10 rounded-xl overflow-hidden shrink-0">
+                <button (click)="updateQty(item, item.quantity - 1)"
+                        class="w-9 h-9 flex items-center justify-center bg-transparent border-none text-white/60 text-base cursor-pointer transition-colors hover:bg-white/10">−</button>
+                <span class="w-9 text-center font-bold text-sm text-white">{{ item.quantity }}</span>
+                <button (click)="updateQty(item, item.quantity + 1)"
+                        [disabled]="item.quantity >= item.plant.stock"
+                        class="w-9 h-9 flex items-center justify-center bg-transparent border-none text-white/60 text-base cursor-pointer transition-colors hover:bg-white/10 disabled:opacity-40 disabled:hover:bg-transparent">+</button>
+              </div>
+
+              <!-- Prix -->
+              <div class="text-end min-w-[100px] shrink-0">
+                <p class="font-extrabold text-base text-emerald-400">
+                  {{ (getPrice(item) * item.quantity) | number:'1.0-0' }} DA
+                </p>
+                <p class="text-[11px] text-white/30 mt-0.5">
+                  {{ getPrice(item) | number:'1.0-0' }} DA / {{ t.cart_unit }}
+                </p>
+              </div>
+
+              <!-- Supprimer -->
+              <button (click)="remove(item)"
+                      class="w-8 h-8 rounded-lg border border-red-500/20 bg-red-500/5 text-red-400 flex items-center justify-center cursor-pointer transition-all hover:bg-red-500/20 hover:text-red-300 shrink-0">
+                <i class="pi pi-times text-xs"></i>
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- Vider panier -->
+        <div class="flex justify-end pt-1">
+          <button (click)="clearCart()"
+                  class="text-xs text-white/30 bg-transparent border-none cursor-pointer flex items-center gap-1.5 transition-colors hover:text-red-400">
+            <i class="pi pi-trash text-[11px]"></i> {{ t.cart_clear }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Résumé -->
+      <div>
+        <div class="bg-white/5 border border-white/10 rounded-[24px] p-6 lg:sticky lg:top-20">
+          <h2 class="text-base font-bold text-white mb-5">{{ t.cart_summary }}</h2>
+
+          <div class="flex flex-col gap-2.5 mb-5 max-h-48 overflow-y-auto pr-1">
+            @for (item of cart.items(); track item.id) {
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-white/60 truncate max-w-[160px]">
+                  {{ item.plant.name }} ×{{ item.quantity }}
+                </span>
+                <span class="font-semibold text-white/80 shrink-0 ms-2">
+                  {{ (getPrice(item) * item.quantity) | number:'1.0-0' }} DA
+                </span>
+              </div>
+            }
+          </div>
+
+          <div class="border-t border-white/5 pt-4 mb-2">
+            <div class="flex justify-between text-sm text-white/50 mb-2">
+              <span>{{ t.cart_subtotal }}</span><span>{{ cart.total() | number:'1.0-0' }} DA</span>
+            </div>
+            <div class="flex justify-between text-sm mb-4">
+              <span class="text-white/50">{{ t.cart_delivery }}</span>
+              <span class="text-emerald-400 font-semibold">{{ t.cart_included }}</span>
+            </div>
+            <div class="flex justify-between text-xl font-black text-white">
+              <span>{{ t.cart_total }}</span>
+              <span class="text-emerald-400">{{ cart.total() | number:'1.0-0' }} DA</span>
+            </div>
+          </div>
+
+          <a routerLink="/checkout"
+             class="block w-full text-center py-3.5 mt-5 rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold text-base no-underline shadow-[0_6px_24px_rgba(34,197,94,0.3)] transition-all hover:scale-[1.01] hover:-translate-y-0.5">
+            {{ t.cart_checkout }} <i class="pi pi-arrow-right text-xs" [class.rotate-180]="i18n.isRtl()"></i>
+          </a>
+          <a routerLink="/catalogue"
+             class="block text-center text-xs text-white/40 mt-3 no-underline transition-colors hover:text-white">
+            {{ t.cart_continue }}
+          </a>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+

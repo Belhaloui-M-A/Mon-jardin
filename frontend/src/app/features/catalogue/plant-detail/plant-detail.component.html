@@ -1,0 +1,187 @@
+<div class="pv-page-container" [dir]="i18n.isRtl() ? 'rtl' : 'ltr'">
+  <p-toast />
+
+  <!-- Breadcrumb -->
+  <nav class="flex items-center gap-2 text-sm text-white/40 mb-8 text-start">
+    <a routerLink="/" class="text-white/40 no-underline transition-colors hover:text-emerald-400">{{ t.nav_home }}</a>
+    <i class="pi pi-chevron-right text-[10px]" [class.rotate-180]="i18n.isRtl()"></i>
+    <a routerLink="/catalogue" class="text-white/40 no-underline transition-colors hover:text-emerald-400">{{ t.nav_catalogue }}</a>
+    @if (plant()) {
+      <i class="pi pi-chevron-right text-[10px]" [class.rotate-180]="i18n.isRtl()"></i>
+      <span class="text-white font-medium">{{ plant()!.name }}</span>
+    }
+  </nav>
+
+  @if (loading()) {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
+      <div class="h-[450px] rounded-3xl bg-white/[0.04] pv-shimmer"></div>
+      <div class="flex flex-col gap-4">
+        <div class="h-10 rounded-xl bg-white/[0.04] w-[70%] pv-shimmer"></div>
+        <div class="h-6 rounded-xl bg-white/[0.03] w-[45%] mb-4 pv-shimmer"></div>
+        <div class="h-28 rounded-xl bg-white/[0.03] pv-shimmer"></div>
+      </div>
+    </div>
+  } @else if (plant()) {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 text-start">
+
+      <!-- Colonne image -->
+      <div class="flex flex-col gap-6">
+        <div class="detail-img-wrap pv-float">
+          <div class="detail-img-glow"></div>
+          <span class="text-[130px] relative z-10 select-none">🪴</span>
+        </div>
+        @if (similar().length > 0) {
+          <div>
+            <p class="text-xs font-bold text-white/40 uppercase tracking-wider mb-3">{{ t.detail_similar }}</p>
+            <div class="flex gap-2.5 flex-wrap">
+              @for (s of similar(); track s.id) {
+                <a [routerLink]="['/catalogue', s.id]"
+                   class="px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white/70 no-underline transition-all hover:border-emerald-400/30 hover:bg-white/10 flex items-center gap-1.5">
+                  <span>🪴</span> {{ s.name }}
+                </a>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Colonne infos -->
+      <div class="flex flex-col">
+        <div class="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-2">
+          {{ plant()!.category?.name }}
+        </div>
+        <h1 class="text-4xl md:text-5xl font-black tracking-tighter leading-tight mb-2 text-white">
+          {{ plant()!.name }}
+        </h1>
+        <p class="text-base text-white/40 italic mb-5">{{ plant()!.species }}</p>
+
+        <!-- Prix -->
+        <div class="flex items-end gap-3.5 mb-6">
+          <span class="text-4xl font-black text-emerald-400">{{ getFinalPrice() | number:'1.0-0' }} DA</span>
+          @if (plant()!.discountPercent && plant()!.discountPercent! > 0) {
+            <span class="text-lg text-white/30 line-through mb-1.5">{{ plant()!.price | number:'1.0-0' }} DA</span>
+          }
+        </div>
+
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="pv-tag-diff"
+                [class.pv-tag-facile]="plant()!.difficultyLevel === 'FACILE'"
+                [class.pv-tag-moyen]="plant()!.difficultyLevel === 'MOYEN'"
+                [class.pv-diff-difficile]="plant()!.difficultyLevel === 'DIFFICILE'">
+            {{ plant()!.difficultyLevel === 'FACILE' ? t.diff_easy : plant()!.difficultyLevel === 'MOYEN' ? t.diff_medium : t.diff_hard }}
+          </span>
+          <span class="pv-info-tag font-bold" [class]="plant()!.stock > 5 ? 'pv-info-tag-green' : plant()!.stock > 0 ? 'pv-info-tag-amber' : 'pv-info-tag-danger'">
+            {{ plant()!.stock > 5 ? '✅ ' + t.detail_in_stock + ' (' + plant()!.stock + ')' : plant()!.stock > 0 ? '⚠️ ' + t.detail_low_stock + ' (' + plant()!.stock + ')' : '❌ ' + t.detail_out_stock }}
+          </span>
+          @if (plant()!.adultSize) {
+            <span class="pv-info-tag pv-info-tag-blue font-bold">📏 {{ t.detail_size }} : {{ plant()!.adultSize }}</span>
+          }
+          @if (plant()!.toxicForAnimals) {
+            <span class="px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              ⚠️ {{ t.detail_toxic }}
+            </span>
+          }
+        </div>
+
+        <!-- Description -->
+        <p class="text-sm text-white/70 leading-relaxed mb-6">{{ plant()!.description }}</p>
+
+        <!-- Soins -->
+        <div class="grid grid-cols-2 gap-3 mb-8">
+          <div class="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white/5 border border-white/10">
+            <span class="text-2xl shrink-0">💧</span>
+            <div>
+              <div class="text-[10px] font-bold text-white/35 uppercase tracking-wider">{{ t.detail_watering }}</div>
+              <div class="text-xs font-semibold text-white mt-0.5">{{ plant()!.wateringFrequency || '—' }}</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white/5 border border-white/10">
+            <span class="text-2xl shrink-0">☀️</span>
+            <div>
+              <div class="text-[10px] font-bold text-white/35 uppercase tracking-wider">{{ t.detail_light }}</div>
+              <div class="text-xs font-semibold text-white mt-0.5">{{ plant()!.lightRequirement || '—' }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quantité + Actions -->
+        @if (!auth.isAdmin()) {
+          <div class="flex items-center gap-4 mt-4">
+            <!-- Quantité -->
+            <div class="flex items-center border border-white/10 rounded-2xl overflow-hidden shrink-0">
+              <button (click)="decrementQty()" class="w-10 h-11 flex items-center justify-center bg-transparent text-white border-none text-xl cursor-pointer transition-colors hover:bg-emerald-400/10 hover:text-emerald-400">−</button>
+              <span class="w-11 text-center font-extrabold text-base text-white">{{ quantity() }}</span>
+              <button (click)="incrementQty()" class="w-10 h-11 flex items-center justify-center bg-transparent text-white border-none text-xl cursor-pointer transition-colors hover:bg-emerald-400/10 hover:text-emerald-400">+</button>
+            </div>
+
+            <!-- Ajouter au panier -->
+            <button pButton [loading]="addingToCart()" [disabled]="plant()!.stock === 0"
+                    icon="pi pi-shopping-cart" [label]="t.detail_add_cart"
+                    (click)="addToCart()"
+                    class="flex-1 rounded-2xl py-3.5 px-6 font-bold text-base bg-gradient-to-r from-emerald-600 to-emerald-500 border-none shadow-[0_6px_24px_rgba(34,197,94,0.35)] transition-all hover:scale-[1.02] hover:-translate-y-0.5">
+            </button>
+
+            <!-- Wishlist -->
+            @if (auth.isLoggedIn()) {
+              <button (click)="toggleWishlist()" [disabled]="toggleWishlistLoading()"
+                      class="w-12 h-12 rounded-2xl border border-white/10 bg-white/5 cursor-pointer flex items-center justify-center transition-all hover:bg-rose-500/10 hover:border-rose-500/20"
+                      [style.color]="inWishlist() ? '#f87171' : 'rgba(255,255,255,.5)'">
+                <i [class]="inWishlist() ? 'pi pi-heart-fill' : 'pi pi-heart'" class="text-xl"></i>
+              </button>
+            }
+          </div>
+
+          @if (!auth.isLoggedIn()) {
+            @if (i18n.currentLang() === 'ar') {
+              <p class="text-sm text-white/50 mt-3">
+                <a routerLink="/auth/login" class="text-emerald-400 font-semibold no-underline hover:underline">سجل الدخول</a> لإضافة المنتج إلى السلة
+              </p>
+            } @else if (i18n.currentLang() === 'en') {
+              <p class="text-sm text-white/50 mt-3">
+                <a routerLink="/auth/login" class="text-emerald-400 font-semibold no-underline hover:underline">Log in</a> to add to cart
+              </p>
+            } @else {
+              <p class="text-sm text-white/50 mt-3">
+                <a routerLink="/auth/login" class="text-emerald-400 font-semibold no-underline hover:underline">Connectez-vous</a> pour ajouter au panier
+              </p>
+            }
+          }
+        }
+      </div>
+    </div>
+  }
+</div>
+
+<style>
+  .detail-img-wrap {
+    height: 460px;
+    border-radius: 28px;
+    background: rgba(74,222,128,.04);
+    border: 1px solid rgba(74,222,128,.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .detail-img-glow {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle,rgba(74,222,128,.18),transparent 70%);
+    filter: blur(30px);
+  }
+  .pv-info-tag-amber {
+    background: rgba(251,191,36,.1);
+    color: #fbbf24;
+    border: 1px solid rgba(251,191,36,.2);
+  }
+  .pv-info-tag-danger {
+    background: rgba(239,68,68,.1);
+    color: #f87171;
+    border: 1px solid rgba(239,68,68,.2);
+  }
+</style>
+

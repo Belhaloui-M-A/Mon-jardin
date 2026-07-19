@@ -1,0 +1,131 @@
+<div class="pv-page-container" [dir]="i18n.isRtl() ? 'rtl' : 'ltr'">
+  <p-toast />
+
+  @if (orderPlaced) {
+    <!-- Succès commande -->
+    <div class="text-center py-20 px-5 text-white/50">
+      <div class="w-20 h-20 rounded-full bg-emerald-400/10 border border-emerald-400/25 flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(74,222,128,0.15)] select-none">
+        <i class="pi pi-check-circle text-4xl text-emerald-400"></i>
+      </div>
+      <h1 class="text-4xl font-black tracking-tight text-white mb-3">
+        {{ t.checkout_success_title }}
+      </h1>
+      <p class="text-base text-white/60 mb-2">
+        {{ i18n.currentLang() === 'ar' ? 'الطلب' : i18n.currentLang() === 'en' ? 'Order' : 'Commande' }}
+        <strong class="text-emerald-400">#{{ orderId }}</strong>. {{ t.checkout_success_sub }}
+      </p>
+      <p class="text-sm text-white/40 mb-10">
+        {{ t.checkout_success_msg }}
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3.5 justify-center items-center">
+        <a routerLink="/orders" class="pv-btn-primary">
+          <i class="pi pi-list"></i> {{ t.checkout_track }}
+        </a>
+        <a routerLink="/catalogue" class="pv-btn-ghost">
+          {{ t.checkout_continue }}
+        </a>
+      </div>
+    </div>
+  } @else {
+    <div class="mb-10 text-start">
+      <div class="pv-section-label">{{ t.cart_label }}</div>
+      <h1 class="pv-section-title">{{ t.checkout_title }}</h1>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 text-start">
+
+      <!-- Formulaire livraison -->
+      <div class="bg-white/5 border border-white/10 rounded-[24px] p-7">
+        <h2 class="text-base font-bold text-white mb-6 flex items-center gap-2">
+          <span class="w-7 h-7 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-500 inline-flex items-center justify-center text-xs font-extrabold text-white">1</span>
+          {{ t.checkout_address }}
+        </h2>
+
+        <form [formGroup]="form">
+          <div class="pv-form-grid">
+            <div class="pv-form-span-2">
+              <label class="pv-form-label">{{ t.checkout_address }} *</label>
+              <input pInputText formControlName="deliveryAddress" class="w-full rounded-xl"
+                     placeholder="12 Rue des Oliviers, Bab El Oued"
+                     [class.ng-invalid]="f('deliveryAddress').invalid && f('deliveryAddress').touched" />
+              @if (f('deliveryAddress').invalid && f('deliveryAddress').touched) {
+                <p class="pv-input-error-msg">
+                  {{ i18n.currentLang() === 'ar' ? 'العنوان مطلوب' : i18n.currentLang() === 'en' ? 'Address is required' : 'Adresse requise' }}
+                </p>
+              }
+            </div>
+            <div>
+              <label class="pv-form-label">{{ t.checkout_city }} *</label>
+              <input pInputText formControlName="deliveryCity" class="w-full rounded-xl" placeholder="Alger"
+                     [class.ng-invalid]="f('deliveryCity').invalid && f('deliveryCity').touched" />
+              @if (f('deliveryCity').invalid && f('deliveryCity').touched) {
+                <p class="pv-input-error-msg">
+                  {{ i18n.currentLang() === 'ar' ? 'المدينة مطلوبة' : i18n.currentLang() === 'en' ? 'City is required' : 'Ville requise' }}
+                </p>
+              }
+            </div>
+            <div>
+              <label class="pv-form-label">{{ t.checkout_phone }} *</label>
+              <input pInputText formControlName="deliveryPhone" class="w-full rounded-xl" placeholder="0555 000 000"
+                     [class.ng-invalid]="f('deliveryPhone').invalid && f('deliveryPhone').touched" />
+              @if (f('deliveryPhone').invalid && f('deliveryPhone').touched) {
+                <p class="pv-input-error-msg">
+                  {{ i18n.currentLang() === 'ar' ? 'رقم الهاتف مطلوب' : i18n.currentLang() === 'en' ? 'Phone is required' : 'Téléphone requis' }}
+                </p>
+              }
+            </div>
+            <div class="pv-form-span-2">
+              <label class="pv-form-label">{{ t.checkout_notes }}</label>
+              <textarea pInputTextarea formControlName="notes" rows="2" class="w-full rounded-xl resize-none"
+                        [placeholder]="t.checkout_notes_ph"></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Récap commande -->
+      <div>
+        <div class="bg-white/5 border border-white/10 rounded-[24px] p-6 lg:sticky lg:top-20">
+          <h2 class="text-base font-bold text-white mb-5 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-500 inline-flex items-center justify-center text-xs font-extrabold text-white">2</span>
+            {{ t.checkout_step2 }}
+          </h2>
+
+          <div class="flex flex-col gap-3 mb-5 max-h-48 overflow-y-auto pr-1">
+            @for (item of items; track item.id) {
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-400/5 border border-emerald-400/10 flex items-center justify-center text-xl shrink-0 select-none">🪴</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-white truncate">{{ item.plant.name }}</p>
+                  <p class="text-xs text-white/40 mt-0.5">×{{ item.quantity }}</p>
+                </div>
+                <span class="text-sm font-bold text-white shrink-0 ms-2">
+                  {{ (getPrice(item) * item.quantity) | number:'1.0-0' }} DA
+                </span>
+              </div>
+            }
+          </div>
+
+          <div class="border-t border-white/5 pt-4 mb-5">
+            <div class="flex justify-between text-sm text-white/50 mb-2">
+              <span>{{ t.cart_delivery }}</span><span class="text-emerald-400 font-semibold">{{ t.checkout_delivery_incl }}</span>
+            </div>
+            <div class="flex justify-between text-xl font-black text-white">
+              <span>{{ t.cart_total }}</span>
+              <span class="text-emerald-400">{{ total | number:'1.0-0' }} DA</span>
+            </div>
+          </div>
+
+          <button pButton [loading]="loading" (click)="submit()"
+                  [label]="t.checkout_confirm" icon="pi pi-check"
+                  class="w-full rounded-2xl py-3.5 font-bold text-sm bg-gradient-to-r from-emerald-600 to-emerald-500 border-none shadow-[0_6px_24px_rgba(34,197,94,0.3)] transition-all hover:scale-[1.01] hover:-translate-y-0.5">
+          </button>
+          <a routerLink="/cart"
+             class="block text-center text-xs text-white/40 mt-3 no-underline transition-colors hover:text-white">
+            {{ t.checkout_back }}
+          </a>
+        </div>
+      </div>
+    </div>
+  }
+</div>
