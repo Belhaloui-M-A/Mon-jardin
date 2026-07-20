@@ -14,7 +14,6 @@ import { I18nService, Lang } from "../../../core/services/i18n.service";
 export class HeaderComponent {
   isMenuOpen = false;
   isLangOpen = false;
-  isMobileMenuOpen = false;
 
   languages = [
     { code: "fr" as Lang, label: "Français", flag: "🇫🇷", short: "FR" },

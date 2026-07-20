@@ -138,11 +138,12 @@ body {
   left: 0;
   right: 0;
   z-index: 100;
-  height: 64px;
+  min-height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 2rem;
   background: var(--pv-glass);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);

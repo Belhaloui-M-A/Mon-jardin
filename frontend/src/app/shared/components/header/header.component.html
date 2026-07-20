@@ -6,55 +6,55 @@
   </a>
 
   <!-- Navigation centrale -->
-  <nav class="hidden md:flex items-center gap-1">
+  <nav class="flex items-center gap-1 w-full order-3 md:order-none md:w-auto overflow-x-auto hide-scrollbar pb-2 md:pb-0 pt-2 md:pt-0">
     <a
       routerLink="/"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
-      class="nav-link"
+      class="nav-link whitespace-nowrap"
       >{{ t.nav_home }}</a
     >
-    <a routerLink="/catalogue" routerLinkActive="active" class="nav-link">{{
+    <a routerLink="/catalogue" routerLinkActive="active" class="nav-link whitespace-nowrap">{{
       t.nav_catalogue
     }}</a>
-    <a routerLink="/reviews" routerLinkActive="active" class="nav-link">{{
+    <a routerLink="/reviews" routerLinkActive="active" class="nav-link whitespace-nowrap">{{
       t.review_label
     }}</a>
     @if (isLoggedIn && !isAdmin) {
-      <a routerLink="/orders" routerLinkActive="active" class="nav-link">{{
+      <a routerLink="/orders" routerLinkActive="active" class="nav-link whitespace-nowrap">{{
         t.nav_orders
       }}</a>
-      <a routerLink="/wishlist" routerLinkActive="active" class="nav-link">{{
+      <a routerLink="/wishlist" routerLinkActive="active" class="nav-link whitespace-nowrap">{{
         t.nav_wishlist
       }}</a>
     }
     @if (isAdmin) {
-      <a routerLink="/admin" routerLinkActive="active" class="nav-link">{{
+      <a routerLink="/admin" routerLinkActive="active" class="nav-link whitespace-nowrap">{{
         t.nav_dashboard
       }}</a>
       <a
         routerLink="/admin/plants"
         routerLinkActive="active"
-        class="nav-link"
+        class="nav-link whitespace-nowrap"
         >{{ t.nav_plants }}</a
       >
       <a
         routerLink="/admin/categories"
         routerLinkActive="active"
-        class="nav-link"
+        class="nav-link whitespace-nowrap"
         >{{ t.nav_categories }}</a
       >
       <a
         routerLink="/admin/orders"
         routerLinkActive="active"
-        class="nav-link"
+        class="nav-link whitespace-nowrap"
         >{{ t.nav_orders }}</a
       >
     }
   </nav>
 
   <!-- Actions droite -->
-  <div class="flex items-center gap-2">
+  <div class="flex items-center gap-2 shrink-0">
     <!-- === SÉLECTEUR DE LANGUE === -->
     <div class="lang-selector" [class.open]="isLangOpen">
       <button
@@ -209,46 +209,14 @@
         {{ t.nav_register }}
       </a>
     }
-
-    <!-- Menu Hamburger (Mobile) -->
-    <button class="md:hidden text-white/70 hover:text-white p-2" (click)="isMobileMenuOpen = !isMobileMenuOpen">
-      <i class="pi" [ngClass]="isMobileMenuOpen ? 'pi-times' : 'pi-bars'" style="font-size: 20px"></i>
-    </button>
   </div>
 </header>
 
-<!-- Mobile Menu Dropdown -->
-@if (isMobileMenuOpen) {
-  <div class="md:hidden fixed top-[72px] inset-x-0 bg-black/95 backdrop-blur-xl border-b border-white/10 z-[100] px-4 py-6 flex flex-col gap-4 shadow-2xl">
-    <a routerLink="/" routerLinkActive="text-emerald-400" [routerLinkActiveOptions]="{exact: true}" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_home }}</a>
-    <a routerLink="/catalogue" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_catalogue }}</a>
-    <a routerLink="/reviews" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.review_label }}</a>
-    
-    @if (isLoggedIn && !isAdmin) {
-      <a routerLink="/orders" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_orders }}</a>
-      <a routerLink="/wishlist" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_wishlist }}</a>
-    }
-    
-    @if (isAdmin) {
-      <a routerLink="/admin" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_dashboard }}</a>
-      <a routerLink="/admin/plants" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_plants }}</a>
-      <a routerLink="/admin/categories" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_categories }}</a>
-      <a routerLink="/admin/orders" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_orders }}</a>
-    }
-
-    @if (!isLoggedIn) {
-      <div class="h-px bg-white/10 my-2"></div>
-      <a routerLink="/auth/login" class="mobile-nav-link text-center" (click)="isMobileMenuOpen = false">{{ t.nav_login }}</a>
-      <a routerLink="/auth/register" class="pv-btn-primary w-full justify-center" (click)="isMobileMenuOpen = false">{{ t.nav_register }}</a>
-    }
-  </div>
-}
-
 <!-- Overlay pour fermer les menus au clic extérieur -->
-@if (isMenuOpen || isLangOpen || isMobileMenuOpen) {
+@if (isMenuOpen || isLangOpen) {
   <div
     style="position: fixed; inset: 0; z-index: 90"
-    (click)="isMenuOpen = false; isLangOpen = false; isMobileMenuOpen = false"
+    (click)="isMenuOpen = false; isLangOpen = false"
   ></div>
 }
 
