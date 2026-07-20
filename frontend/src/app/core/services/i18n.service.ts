@@ -41,6 +41,7 @@ export interface Translations {
   home_cta_title: string;
   home_cta_sub: string;
   home_cta_btn: string;
+  home_stock_limited: string;
 
   // CATEGORIES
   cat_interior: string;
@@ -329,6 +330,7 @@ const FR: Translations = {
   home_cta_title: 'Prêt à verdir votre espace ?',
   home_cta_sub: 'Créez votre compte gratuitement et profitez de conseils personnalisés.',
   home_cta_btn: 'Commencer mes achats',
+  home_stock_limited: 'Stock limité',
 
   cat_interior: 'Intérieur', cat_exterior: 'Extérieur',
   cat_succulents: 'Succulentes & Cactus', cat_aromatic: 'Aromatiques', cat_tropical: 'Tropicales',
@@ -485,6 +487,7 @@ const EN: Translations = {
   home_cta_title: 'Ready to green your space?',
   home_cta_sub: 'Create your free account and get personalized care tips.',
   home_cta_btn: 'Start shopping',
+  home_stock_limited: 'Limited stock',
 
   cat_interior: 'Indoor', cat_exterior: 'Outdoor',
   cat_succulents: 'Succulents & Cacti', cat_aromatic: 'Herbs', cat_tropical: 'Tropical',
@@ -639,8 +642,9 @@ const AR: Translations = {
   home_catalogue_label: 'المتجر', home_catalogue_title: 'وصل حديثًا',
   home_see_all: 'عرض الكل',
   home_cta_title: 'هل أنت مستعد لإضفاء الخضرة على مساحتك؟',
-  home_cta_sub: 'أنشئ حسابك مجانًا واحصل على نصائح عناية شخصية.',
+  home_cta_sub: 'أنشئ حسابك مجاناً واحصل على نصائح عناية مخصصة.',
   home_cta_btn: 'ابدأ التسوق',
+  home_stock_limited: 'مخزون محدود',
 
   cat_interior: 'نباتات داخلية', cat_exterior: 'نباتات خارجية',
   cat_succulents: 'نباتات صحراوية', cat_aromatic: 'نباتات عطرية', cat_tropical: 'نباتات استوائية',

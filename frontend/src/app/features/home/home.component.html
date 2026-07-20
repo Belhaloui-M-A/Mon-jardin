@@ -88,7 +88,9 @@
       }
     </div>
     <div class="featured-info text-center md:text-left">
-      <div class="pv-section-label mx-auto md:mx-0">{{ plantOfTheMonth()?.category?.name }} • Stock limité</div>
+      <div class="pv-section-label mx-auto md:mx-0">
+      {{ plantOfTheMonth()?.category?.name }} • {{ t.home_stock_limited || 'Stock limité' }}
+    </div>
       <h2 class="text-3xl md:text-[48px] font-black tracking-tight leading-tight mb-2">
         {{ plantOfTheMonth()?.name }}
       </h2>
@@ -134,7 +136,7 @@
       class="pv-btn-ghost"
       style="padding: 10px 24px; font-size: 13px"
     >
-      Voir tout <i class="pi pi-arrow-right"></i>
+      {{ t.home_see_all }} <i class="pi pi-arrow-right" [class.rotate-180]="i18n.isRtl()"></i>
     </a>
   </div>
 
