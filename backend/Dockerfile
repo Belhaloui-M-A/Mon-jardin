@@ -7,12 +7,12 @@ WORKDIR /app
 # Copier pom.xml séparément pour tirer parti du cache Maven
 COPY pom.xml .
 RUN --mount=type=cache,target=/root/.m2 \
-    mvn dependency:go-offline -q 2>/dev/null || true
+    mvn dependency:go-offline 2>/dev/null || true
 
 # Copier les sources et builder
 COPY src ./src
 RUN --mount=type=cache,target=/root/.m2 \
-    mvn clean package -DskipTests -q
+    mvn clean package -DskipTests
 
 # =============================================
 # Stage 2 : Image runtime légère
