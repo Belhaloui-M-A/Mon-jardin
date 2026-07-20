@@ -35,6 +35,7 @@ export interface Plant {
   price: number;
   stock: number;
   imageUrl?: string;
+  images?: string[];
   wateringFrequency?: string;
   lightRequirement?: string;
   difficultyLevel?: 'FACILE' | 'MOYEN' | 'DIFFICILE';
@@ -43,6 +44,7 @@ export interface Plant {
   discountPercent?: number;
   finalPrice?: number;
   active: boolean;
+  plantOfTheMonth?: boolean;
   category?: Category;
   createdAt?: string;
 }

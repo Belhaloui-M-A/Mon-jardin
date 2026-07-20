@@ -21,6 +21,7 @@ import { I18nService } from '../../../core/services/i18n.service';
 })
 export class PlantDetailComponent implements OnInit {
   plant = signal<Plant | null>(null);
+  activeImageIndex = signal(0);
   similar = signal<Plant[]>([]);
   loading = signal(true);
   quantity = signal(1);
@@ -47,6 +48,7 @@ export class PlantDetailComponent implements OnInit {
       this.plantService.getById(id).subscribe({
         next: p => {
           this.plant.set(p);
+          this.activeImageIndex.set(0);
           this.loading.set(false);
           this.plantService.getSimilar(id).subscribe(s => this.similar.set(s));
           if (this.auth.isLoggedIn() && !this.auth.isAdmin()) {

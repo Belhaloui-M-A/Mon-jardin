@@ -22,6 +22,10 @@ export class PlantService {
     return this.http.get<Page<Plant>>(this.API, { params: p });
   }
 
+  getPlantOfTheMonth(): Observable<Plant> {
+    return this.http.get<Plant>(`${this.API}/featured`);
+  }
+
   getById(id: number): Observable<Plant> {
     return this.http.get<Plant>(`${this.API}/${id}`);
   }
@@ -41,6 +45,14 @@ export class PlantService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.API}/${id}`);
+  }
+
+  createMultipart(formData: FormData): Observable<Plant> {
+    return this.http.post<Plant>(this.API, formData);
+  }
+
+  updateMultipart(id: number, formData: FormData): Observable<Plant> {
+    return this.http.put<Plant>(`${this.API}/${id}`, formData);
   }
 }
 

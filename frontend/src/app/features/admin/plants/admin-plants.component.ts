@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -11,6 +11,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { CheckboxModule } from 'primeng/checkbox';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { Plant, Category } from '../../../core/models/models';
 import { PlantService } from '../../../core/services/plant-cart.service';
@@ -22,7 +23,7 @@ import { I18nService } from '../../../core/services/i18n.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, ButtonModule, TableModule,
             DialogModule, InputTextModule, InputNumberModule, DropdownModule,
-            InputTextareaModule, TagModule, ToastModule, ConfirmDialogModule],
+            InputTextareaModule, TagModule, ToastModule, ConfirmDialogModule, CheckboxModule],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-plants.component.html'
 })
@@ -33,6 +34,13 @@ export class AdminPlantsComponent implements OnInit {
   dialogVisible = signal(false);
   editingPlant = signal<Plant | null>(null);
   saving = signal(false);
+
+  selectedImages = signal<File[]>([]);
+  existingImages = signal<string[]>([]);
+  
+  previewUrls = computed(() => 
+    this.selectedImages().map(f => URL.createObjectURL(f))
+  );
 
   form: FormGroup;
 
@@ -60,7 +68,6 @@ export class AdminPlantsComponent implements OnInit {
       description:       [''],
       price:             [0, [Validators.required, Validators.min(1)]],
       stock:             [0, [Validators.required, Validators.min(0)]],
-      imageUrl:          [''],
       wateringFrequency: [''],
       lightRequirement:  [''],
       difficultyLevel:   ['FACILE'],
@@ -68,6 +75,7 @@ export class AdminPlantsComponent implements OnInit {
       toxicForAnimals:   [false],
       discountPercent:   [0],
       active:            [true],
+      plantOfTheMonth:   [false],
       categoryId:        [null, Validators.required],
     });
   }
@@ -75,6 +83,14 @@ export class AdminPlantsComponent implements OnInit {
   ngOnInit(): void {
     this.categoryService.getAll().subscribe(c => this.categories.set(c));
     this.loadPlants();
+  }
+
+  ngOnDestroy(): void {
+    this.revokePreviewUrls();
+  }
+
+  private revokePreviewUrls(): void {
+    this.previewUrls().forEach(url => URL.revokeObjectURL(url));
   }
 
   loadPlants(): void {
@@ -86,25 +102,82 @@ export class AdminPlantsComponent implements OnInit {
 
   openNew(): void {
     this.editingPlant.set(null);
-    this.form.reset({ difficultyLevel: 'FACILE', active: true, stock: 0, price: 0, discountPercent: 0, toxicForAnimals: false });
+    this.form.reset({ difficultyLevel: 'FACILE', active: true, stock: 0, price: 0, discountPercent: 0, toxicForAnimals: false, plantOfTheMonth: false });
+    this.revokePreviewUrls();
+    this.selectedImages.set([]);
+    this.existingImages.set([]);
     this.dialogVisible.set(true);
   }
 
   openEdit(plant: Plant): void {
     this.editingPlant.set(plant);
     this.form.patchValue({ ...plant, categoryId: plant.category?.id });
+    this.revokePreviewUrls();
+    this.selectedImages.set([]);
+    // Load existing images if available
+    const existing = plant.images ? [...plant.images] : (plant.imageUrl ? [plant.imageUrl] : []);
+    this.existingImages.set(existing);
     this.dialogVisible.set(true);
+  }
+
+  onFilesSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const newFiles = Array.from(input.files);
+      const validFiles = newFiles.filter(f => f.size <= 5 * 1024 * 1024 && f.type.startsWith('image/'));
+      if (newFiles.length !== validFiles.length) {
+        this.toast.add({ severity: 'warn', summary: 'Attention', detail: 'Certains fichiers ont été ignorés (trop volumineux ou format invalide)' });
+      }
+      this.selectedImages.update(files => [...files, ...validFiles]);
+    }
+    input.value = ''; // reset
+  }
+
+  removeSelectedImage(index: number): void {
+    this.selectedImages.update(files => {
+      const copy = [...files];
+      copy.splice(index, 1);
+      return copy;
+    });
+  }
+
+  removeExistingImage(index: number): void {
+    this.existingImages.update(imgs => {
+      const copy = [...imgs];
+      copy.splice(index, 1);
+      return copy;
+    });
   }
 
   save(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.saving.set(true);
-    const { categoryId, ...data } = this.form.value;
+    
+    // Construct FormData
+    const formData = new FormData();
+    const formValue = this.form.value;
+    
+    // Append simple fields
+    Object.keys(formValue).forEach(key => {
+      if (formValue[key] !== null && formValue[key] !== undefined && formValue[key] !== '') {
+        formData.append(key, formValue[key]);
+      }
+    });
+
+    // Append existing images (as multiple string parts or a single comma-separated string depending on backend mapping, let's append as multiple)
+    this.existingImages().forEach(img => formData.append('existingImages', img));
+
+    // Append new files
+    this.selectedImages().forEach(file => {
+      formData.append('images', file, file.name);
+    });
+
     const editing = this.editingPlant();
 
+    // The plantService should accept FormData
     const request$ = editing
-      ? this.plantService.update(editing.id, data, categoryId)
-      : this.plantService.create(data, categoryId);
+      ? this.plantService.updateMultipart(editing.id, formData)
+      : this.plantService.createMultipart(formData);
 
     request$.subscribe({
       next: () => {

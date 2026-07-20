@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "refresh_tokens", indexes = {
-    @Index(name = "idx_refresh_token_value", columnList = "token"),
+    @Index(name = "idx_refresh_token_value", columnList = "token_id"),
     @Index(name = "idx_refresh_token_user", columnList = "user_id")
 })
 @EntityListeners(AuditingEntityListener.class)

@@ -60,7 +60,8 @@ public record OrderResponse(
 
     public record PlantSummary(Long id, String name, String imageUrl, BigDecimal price) {
         static PlantSummary from(Plant p) {
-            return new PlantSummary(p.getId(), p.getName(), p.getImageUrl(), p.getPrice());
+            String primaryImage = (p.getImages() != null && !p.getImages().isEmpty()) ? p.getImages().get(0) : null;
+            return new PlantSummary(p.getId(), p.getName(), primaryImage, p.getPrice());
         }
     }
 }

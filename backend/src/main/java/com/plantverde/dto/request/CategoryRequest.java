@@ -8,6 +8,5 @@ import jakarta.validation.constraints.Size;
  */
 public record CategoryRequest(
     @NotBlank @Size(max = 50) String name,
-    @Size(max = 255) String description,
-    String imageUrl
+    @Size(max = 255) String description
 ) {}

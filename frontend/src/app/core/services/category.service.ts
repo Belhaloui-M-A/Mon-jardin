@@ -24,4 +24,12 @@ export class CategoryService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.API}/${id}`);
   }
+
+  createMultipart(formData: FormData): Observable<Category> {
+    return this.http.post<Category>(this.API, formData);
+  }
+
+  updateMultipart(id: number, formData: FormData): Observable<Category> {
+    return this.http.put<Category>(`${this.API}/${id}`, formData);
+  }
 }

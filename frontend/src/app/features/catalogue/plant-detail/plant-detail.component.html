@@ -26,10 +26,36 @@
 
       <!-- Colonne image -->
       <div class="flex flex-col gap-6">
-        <div class="detail-img-wrap pv-float">
+        <div class="detail-img-wrap pv-float relative overflow-hidden rounded-[40px]">
           <div class="detail-img-glow"></div>
-          <span class="text-[130px] relative z-10 select-none">🪴</span>
+          @if (plant()!.images && plant()!.images!.length > 0) {
+            <img [src]="plant()!.images![activeImageIndex()]" class="w-full h-full object-cover relative z-10 transition-all duration-300" />
+          } @else if (plant()!.imageUrl) {
+            <img [src]="plant()!.imageUrl" class="w-full h-full object-cover relative z-10" />
+          } @else {
+            <span class="text-[130px] relative z-10 select-none">🪴</span>
+          }
         </div>
+        
+        @if (plant()!.images && plant()!.images!.length > 1) {
+          <div class="flex gap-2 overflow-x-auto pb-2 mt-2">
+            @for (img of plant()!.images; track img; let i = $index) {
+              <button 
+                type="button" 
+                (click)="activeImageIndex.set(i)"
+                class="w-20 h-20 rounded-xl overflow-hidden border-2 transition-all cursor-pointer p-0"
+                [class.border-emerald-400]="activeImageIndex() === i"
+                [class.border-white]="activeImageIndex() !== i"
+                [class.opacity-100]="activeImageIndex() === i"
+                [class.opacity-50]="activeImageIndex() !== i"
+                style="border-color: rgba(255,255,255,0.1)"
+                [style.border-color]="activeImageIndex() === i ? '#34d399' : 'rgba(255,255,255,0.1)'"
+              >
+                <img [src]="img" class="w-full h-full object-cover" />
+              </button>
+            }
+          </div>
+        }
         @if (similar().length > 0) {
           <div>
             <p class="text-xs font-bold text-white/40 uppercase tracking-wider mb-3">{{ t.detail_similar }}</p>

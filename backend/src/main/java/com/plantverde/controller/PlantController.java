@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.math.BigDecimal;
@@ -42,6 +44,16 @@ public class PlantController {
         );
     }
 
+    @GetMapping("/featured")
+    @Operation(summary = "Récupère la plante du mois")
+    public ResponseEntity<Plant> getFeatured() {
+        Plant plant = plantService.getFeatured();
+        if (plant == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(plant);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Plant> getById(@PathVariable Long id) {
         return ResponseEntity.ok(plantService.getById(id));
@@ -53,26 +65,29 @@ public class PlantController {
         return ResponseEntity.ok(plantService.getSimilar(id, plant.getCategory().getId()));
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Plant> create(
-        @Valid @RequestBody PlantRequest plant,
-        @RequestParam Long categoryId
+        @Valid @ModelAttribute PlantRequest plant,
+        @RequestParam Long categoryId,
+        @RequestPart(value = "images", required = false) List<MultipartFile> images
     ) {
-        Plant created = plantService.create(plant, categoryId);
+        Plant created = plantService.createMultipart(plant, categoryId, images);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}").buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(location).body(created);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Plant> update(
         @PathVariable Long id,
-        @Valid @RequestBody PlantRequest plant,
-        @RequestParam(required = false) Long categoryId
+        @Valid @ModelAttribute PlantRequest plant,
+        @RequestParam(required = false) Long categoryId,
+        @RequestParam(required = false) List<String> existingImages,
+        @RequestPart(value = "images", required = false) List<MultipartFile> images
     ) {
-        return ResponseEntity.ok(plantService.update(id, plant, categoryId));
+        return ResponseEntity.ok(plantService.updateMultipart(id, plant, categoryId, existingImages, images));
     }
 
     @DeleteMapping("/{id}")

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from "@angular/core";
+import { Component, OnInit, signal, computed, OnDestroy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import {
   FormBuilder,
@@ -46,6 +46,13 @@ export class AdminCategoriesComponent implements OnInit {
   editing = signal<Category | null>(null);
   saving = signal(false);
 
+  selectedImage = signal<File | null>(null);
+  previewUrl = computed(() => {
+    const file = this.selectedImage();
+    return file ? URL.createObjectURL(file) : null;
+  });
+  existingImageUrl = signal<string | null>(null);
+
   form: FormGroup;
 
   get t() {
@@ -61,13 +68,17 @@ export class AdminCategoriesComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       name: ["", [Validators.required, Validators.maxLength(50)]],
-      description: ["", Validators.maxLength(255)],
-      imageUrl: [""],
+      description: ["", Validators.maxLength(255)]
     });
   }
 
   ngOnInit(): void {
     this.loadCategories();
+  }
+
+  ngOnDestroy(): void {
+    const url = this.previewUrl();
+    if (url) URL.revokeObjectURL(url);
   }
 
   loadCategories(): void {
@@ -83,14 +94,39 @@ export class AdminCategoriesComponent implements OnInit {
 
   openNew(): void {
     this.editing.set(null);
-    this.form.reset({ name: "", description: "", imageUrl: "" });
+    this.form.reset({ name: "", description: "" });
+    this.selectedImage.set(null);
+    this.existingImageUrl.set(null);
     this.dialogVisible.set(true);
   }
 
   openEdit(category: Category): void {
     this.editing.set(category);
     this.form.patchValue(category);
+    this.selectedImage.set(null);
+    this.existingImageUrl.set(category.imageUrl || null);
     this.dialogVisible.set(true);
+  }
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        this.toast.add({ severity: 'error', summary: 'Erreur', detail: 'Fichier trop volumineux (max 5 Mo)' });
+        return;
+      }
+      this.selectedImage.set(file);
+    }
+  }
+
+  removeSelectedImage(): void {
+    const url = this.previewUrl();
+    if (url) URL.revokeObjectURL(url);
+    this.selectedImage.set(null);
+  }
+
+  removeExistingImage(): void {
+    this.existingImageUrl.set(null);
   }
 
   save(): void {
@@ -101,9 +137,28 @@ export class AdminCategoriesComponent implements OnInit {
     this.saving.set(true);
     const editing = this.editing();
 
+    const formData = new FormData();
+    const formValue = this.form.value;
+    
+    Object.keys(formValue).forEach(key => {
+      if (formValue[key] !== null && formValue[key] !== undefined && formValue[key] !== '') {
+        formData.append(key, formValue[key]);
+      }
+    });
+
+    const file = this.selectedImage();
+    if (file) {
+      formData.append('image', file, file.name);
+    }
+
+    const existingImg = this.existingImageUrl();
+    if (existingImg) {
+      formData.append('existingImage', existingImg);
+    }
+
     const request$ = editing
-      ? this.categoryService.update(editing.id, this.form.value)
-      : this.categoryService.create(this.form.value);
+      ? this.categoryService.updateMultipart(editing.id, formData)
+      : this.categoryService.createMultipart(formData);
 
     request$.subscribe({
       next: () => {

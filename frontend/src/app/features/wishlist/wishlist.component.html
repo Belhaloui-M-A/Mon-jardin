@@ -24,7 +24,13 @@
         <div class="pv-card">
           <div class="pv-card-img">
             <div class="pv-card-glow"></div>
-            <span class="pv-card-emoji">🪴</span>
+            @if (item.plant.images && item.plant.images.length > 0) {
+              <img [src]="item.plant.images[0]" class="w-full h-full object-cover relative z-10" />
+            } @else if (item.plant.imageUrl) {
+              <img [src]="item.plant.imageUrl" class="w-full h-full object-cover relative z-10" />
+            } @else {
+              <span class="pv-card-emoji">🪴</span>
+            }
           </div>
           <div class="pv-card-body flex flex-col justify-between h-[180px]">
             <div>

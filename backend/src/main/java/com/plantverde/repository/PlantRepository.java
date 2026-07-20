@@ -14,6 +14,8 @@ import java.util.List;
 @Repository
 public interface PlantRepository extends JpaRepository<Plant, Long> {
 
+    java.util.Optional<Plant> findFirstByPlantOfTheMonthTrueAndActiveTrueOrderByCreatedAtDesc();
+
     @Query("""
         SELECT p FROM Plant p
         WHERE p.active = true

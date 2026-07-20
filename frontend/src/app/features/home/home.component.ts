@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { CommonModule } from "@angular/common";
-import { Plant } from "../../core/models/models";
+import { Plant, Category } from "../../core/models/models";
 import {
   PlantService,
   CartService,
@@ -29,6 +29,8 @@ export class HomeComponent implements OnInit {
 
   totalPlants = signal<number | string>("...");
   totalCategories = signal<number | string>("...");
+  categories = signal<Category[]>([]);
+  plantOfTheMonth = signal<Plant | null>(null);
 
   get t() {
     return this.i18n.t();
@@ -43,15 +45,7 @@ export class HomeComponent implements OnInit {
     ];
   }
 
-  get categoryCards() {
-    return [
-      { name: this.t.cat_interior, emoji: "🪴" },
-      { name: this.t.cat_exterior, emoji: "🌳" },
-      { name: this.t.cat_succulents, emoji: "🌵" },
-      { name: this.t.cat_aromatic, emoji: "🌿" },
-      { name: this.t.cat_tropical, emoji: "🌴" },
-    ];
-  }
+
 
   constructor(
     private plantService: PlantService,
@@ -77,8 +71,19 @@ export class HomeComponent implements OnInit {
         },
         error: () => this.loading.set(false),
       });
+
+    this.plantService.getPlantOfTheMonth().subscribe({
+      next: (plant) => {
+        if (plant) this.plantOfTheMonth.set(plant);
+      },
+      error: () => {},
+    });
+
     this.categoryService.getAll().subscribe({
-      next: (cats) => this.totalCategories.set(cats.length),
+      next: (cats) => {
+        this.totalCategories.set(cats.length);
+        this.categories.set(cats);
+      },
       error: () => {},
     });
   }

@@ -32,8 +32,7 @@
     </div>
 
     <!-- Decorative Plant Animation -->
-    <!-- <div class="hidden lg:block absolute" style="left: 10%; bottom: -40px; z-index: 0">
-      <app-plant-animation></app-plant-animation>
+    <!--    <div class="hidden lg:block relative z-10 w-full max-w-[500px]">
     </div> -->
 
     <!-- Stats -->
@@ -64,10 +63,14 @@
     <p class="pv-section-sub">{{ t.home_collections_sub }}</p>
   </div>
   <div class="cat-grid">
-    @for (c of categoryCards; track c.name) {
-      <a [routerLink]="['/catalogue']" class="cat-card-3d">
+    @for (c of categories(); track c.id) {
+      <a [routerLink]="['/catalogue']" [queryParams]="{ category: c.id }" class="cat-card-3d">
         <div class="cat-card-glow"></div>
-        <span class="cat-emoji">{{ c.emoji }}</span>
+        @if (c.imageUrl) {
+          <img [src]="c.imageUrl" [alt]="c.name" class="cat-image" />
+        } @else {
+          <span class="cat-emoji">🪴</span>
+        }
         <span class="cat-name">{{ c.name }}</span>
       </a>
     }
@@ -75,6 +78,7 @@
 </section>
 
 <!-- PLANTE VEDETTE -->
+@if (plantOfTheMonth()) {
 <section style="padding: 0 2rem 80px; position: relative; z-index: 1">
   <div style="text-align: center; margin-bottom: 40px">
     <div class="pv-section-label">{{ t.home_featured_label }}</div>
@@ -83,19 +87,25 @@
   <div class="featured-3d">
     <div class="featured-visual pv-float">
       <div class="featured-glow"></div>
-      <span style="font-size: 120px; position: relative; z-index: 1">🌿</span>
+      @if (plantOfTheMonth()?.images && plantOfTheMonth()!.images!.length > 0) {
+        <img [src]="plantOfTheMonth()?.images?.[0]" [alt]="plantOfTheMonth()?.name" class="w-full h-full object-cover rounded-[32px] relative z-10" />
+      } @else if (plantOfTheMonth()?.imageUrl) {
+        <img [src]="plantOfTheMonth()?.imageUrl" [alt]="plantOfTheMonth()?.name" class="w-full h-full object-cover rounded-[32px] relative z-10" />
+      } @else {
+        <span style="font-size: 120px; position: relative; z-index: 1">🌿</span>
+      }
     </div>
     <div class="featured-info">
-      <div class="pv-section-label">{{ t.cat_interior }} • Stock limité</div>
+      <div class="pv-section-label">{{ plantOfTheMonth()?.category?.name }} • Stock limité</div>
       <h2
         style="
           font-size: 48px;
           font-weight: 900;
           letter-spacing: -2px;
-          line-height: 1;
+          line-height: 1.1;
         "
       >
-        Monstera<br /><span class="pv-grad">Deliciosa</span>
+        {{ plantOfTheMonth()?.name }}
       </h2>
       <p
         style="
@@ -104,7 +114,7 @@
           margin: 8px 0 20px;
         "
       >
-        Monstera deliciosa
+        {{ plantOfTheMonth()?.species }}
       </p>
       <p
         style="
@@ -114,26 +124,31 @@
           font-size: 15px;
         "
       >
-        La plante tendance par excellence. Ses grandes feuilles découpées
-        apportent une touche tropicale à tout intérieur. Très facile à
-        entretenir, même pour les débutants.
+        {{ plantOfTheMonth()?.description }}
       </p>
       <div class="flex flex-wrap gap-2 mb-6">
-        <span class="pv-info-tag pv-info-tag-green">💧 1 fois/semaine</span>
-        <span class="pv-info-tag pv-info-tag-blue">☀️ Lumière indirecte</span>
-        <span class="pv-info-tag pv-info-tag-amber">📏 1.5 – 2 m</span>
+        @if (plantOfTheMonth()?.wateringFrequency) {
+          <span class="pv-info-tag pv-info-tag-green">💧 {{ plantOfTheMonth()?.wateringFrequency }}</span>
+        }
+        @if (plantOfTheMonth()?.lightRequirement) {
+          <span class="pv-info-tag pv-info-tag-blue">☀️ {{ plantOfTheMonth()?.lightRequirement }}</span>
+        }
+        @if (plantOfTheMonth()?.adultSize) {
+          <span class="pv-info-tag pv-info-tag-amber">📏 {{ plantOfTheMonth()?.adultSize }}</span>
+        }
       </div>
       <div class="flex items-center gap-5">
         <span style="font-size: 40px; font-weight: 900; color: #4ade80"
-          >2 500 DA</span
+          >{{ plantOfTheMonth()?.price }} DA</span
         >
-        <a routerLink="/catalogue/1" class="pv-btn-primary">
+        <a [routerLink]="['/catalogue', plantOfTheMonth()?.id]" class="pv-btn-primary">
           <i class="pi pi-shopping-cart"></i> Voir la plante
         </a>
       </div>
     </div>
   </div>
 </section>
+}
 
 <!-- PLANTES VEDETTES -->
 <section style="padding: 0 2rem 80px; position: relative; z-index: 1">
@@ -153,7 +168,7 @@
 
   @if (loading()) {
     <div class="plant-grid-3d">
-      @for (s of skeletons; track s) {
+      @for (s of skeletons; track $index) {
         <div class="skeleton-card">
           <div class="skeleton-img"></div>
           <div class="skeleton-lines">
@@ -173,7 +188,13 @@
           }
           <div class="pv-card-img">
             <div class="pv-card-glow"></div>
-            <span class="pv-card-emoji">🪴</span>
+            @if (plant.images && plant.images.length > 0) {
+              <img [src]="plant.images[0]" class="w-full h-full object-cover relative z-10" />
+            } @else if (plant.imageUrl) {
+              <img [src]="plant.imageUrl" class="w-full h-full object-cover relative z-10" />
+            } @else {
+              <span class="pv-card-emoji">🪴</span>
+            }
           </div>
           <div class="pv-card-body">
             <div class="pv-card-cat">{{ plant.category?.name }}</div>
@@ -383,7 +404,7 @@
   }
   .cat-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 14px;
     max-width: 1100px;
     margin: 0 auto;
@@ -425,6 +446,19 @@
     transition: transform 0.3s;
   }
   .cat-card-3d:hover .cat-emoji {
+    transform: scale(1.15) translateY(-3px);
+  }
+  .cat-image {
+    display: block;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    transition: transform 0.3s;
+    border: 2px solid rgba(74, 222, 128, 0.4);
+  }
+  .cat-card-3d:hover .cat-image {
     transform: scale(1.15) translateY(-3px);
   }
   .cat-name {

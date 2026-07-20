@@ -58,9 +58,13 @@
           <td>
             <div class="flex items-center gap-3">
               <div
-                class="w-10 h-10 rounded-xl bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-center text-xl shrink-0"
+                class="w-10 h-10 rounded-xl bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-center text-xl shrink-0 overflow-hidden"
               >
-                🌿
+                @if (category.imageUrl) {
+                  <img [src]="category.imageUrl" class="w-full h-full object-cover" />
+                } @else {
+                  🌿
+                }
               </div>
               <p class="font-bold text-sm text-white">{{ category.name }}</p>
             </div>
@@ -155,13 +159,51 @@
         ></textarea>
       </div>
       <div>
-        <label class="pv-form-label">{{ t.admin_plant_image_url }}</label>
-        <input
-          pInputText
-          formControlName="imageUrl"
-          class="w-full"
-          placeholder="https://..."
+        <label class="pv-form-label">Image</label>
+        
+        <!-- Bouton d'upload -->
+        <button type="button" class="pv-btn-primary mb-3" (click)="fileInput.click()">
+          <i class="pi pi-upload"></i> Sélectionner une image
+        </button>
+        <input 
+          type="file" 
+          accept="image/png, image/jpeg, image/webp" 
+          hidden 
+          #fileInput 
+          (change)="onFileSelected($event)" 
         />
+        
+        <!-- Prévisualisation -->
+        <div class="flex flex-wrap gap-3 mt-2">
+          <!-- Ancienne image (édition) -->
+          @if (existingImageUrl()) {
+            <div class="relative w-24 h-24 rounded-xl overflow-hidden group border border-white/10">
+              <img [src]="existingImageUrl()" class="w-full h-full object-cover" />
+              <button 
+                type="button" 
+                class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-rose-400 cursor-pointer border-none m-0"
+                (click)="removeExistingImage()">
+                <i class="pi pi-trash text-xl"></i>
+              </button>
+            </div>
+          }
+          
+          <!-- Nouvelle image sélectionnée -->
+          @if (previewUrl()) {
+            <div class="relative w-24 h-24 rounded-xl overflow-hidden group border border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+              <img [src]="previewUrl()" class="w-full h-full object-cover" />
+              <button 
+                type="button" 
+                class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-rose-400 cursor-pointer border-none m-0"
+                (click)="removeSelectedImage()">
+                <i class="pi pi-trash text-xl"></i>
+              </button>
+              <div class="absolute top-1 right-1 bg-emerald-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md">
+                NOUV
+              </div>
+            </div>
+          }
+        </div>
       </div>
     </form>
     <ng-template pTemplate="footer">

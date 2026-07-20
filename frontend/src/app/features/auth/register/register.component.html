@@ -39,7 +39,7 @@
 
       <!-- STEPPER -->
       <div class="flex items-center mb-6 px-1">
-        @for (s of [1,2]; track s) {
+        @for (s of [1,2]; track $index) {
           <div class="flex items-center flex-1">
             <div class="flex items-center gap-2">
               <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-all duration-300 border"
@@ -103,27 +103,33 @@
 
                 <!-- Téléphone -->
                 <div>
-                  <label class="pv-form-label">{{ t.profile_phone }}</label>
-                  <div class="relative">
-                    <span class="absolute top-1/2 -translate-y-1/2 text-xs text-white/40"
+                  <label class="pv-form-label">{{ t.profile_phone }} *</label>
+                  <div class="relative w-full">
+                    <span class="absolute top-1/2 -translate-y-1/2 text-white/40 text-xs font-bold"
                           [style.left]="!isRtl ? '12px' : 'auto'"
                           [style.right]="isRtl ? '12px' : 'auto'">🇩🇿</span>
                     <input pInputText formControlName="phone" class="w-full"
                            [style.paddingLeft]="!isRtl ? '36px' : '12px'"
                            [style.paddingRight]="isRtl ? '36px' : '12px'"
                            placeholder="0555 000 000"
-                           [class.ng-invalid]="hasError('phone','pattern')" />
+                           [class.ng-invalid]="hasError('phone','required') || hasError('phone','pattern')" />
                   </div>
-                  @if (hasError('phone','pattern')) {
+                  @if (hasError('phone','required')) {
+                    <p class="pv-input-error-msg">{{ i18n.currentLang() === 'ar' ? 'رقم الهاتف مطلوب' : i18n.currentLang() === 'en' ? 'Phone required' : 'Téléphone requis' }}</p>
+                  } @else if (hasError('phone','pattern')) {
                     <p class="pv-input-error-msg">{{ i18n.currentLang() === 'ar' ? 'صيغة غير صالحة (مثال: 0555123456)' : i18n.currentLang() === 'en' ? 'Invalid format (ex: 0555123456)' : 'Format invalide (ex: 0555123456)' }}</p>
                   }
                 </div>
 
                 <!-- Adresse -->
                 <div>
-                  <label class="pv-form-label">{{ t.profile_address }}</label>
+                  <label class="pv-form-label">{{ t.profile_address }} *</label>
                   <input pInputText formControlName="address" class="w-full"
-                         [placeholder]="isRtl ? 'الجزائر، وهران...' : 'Alger, Oran...'" />
+                         [placeholder]="isRtl ? 'الجزائر، وهران...' : 'Alger, Oran...'"
+                         [class.ng-invalid]="hasError('address','required')" />
+                  @if (hasError('address','required')) {
+                    <p class="pv-input-error-msg">{{ i18n.currentLang() === 'ar' ? 'العنوان مطلوب' : i18n.currentLang() === 'en' ? 'Address required' : 'Adresse requise' }}</p>
+                  }
                 </div>
 
               </div>
@@ -185,10 +191,6 @@
                   }
                   @if (hasError('password','tooShort')) {
                     <p class="pv-input-error-msg">{{ i18n.currentLang() === 'ar' ? 'الحد الأدنى 8 أحرف' : i18n.currentLang() === 'en' ? 'Minimum 8 characters' : 'Minimum 8 caractères' }}</p>
-                  } @else if (hasError('password','noUppercase')) {
-                    <p class="pv-input-error-msg">{{ i18n.currentLang() === 'ar' ? 'حرف كبير واحد على الأقل (A-Z)' : i18n.currentLang() === 'en' ? 'At least one uppercase letter (A-Z)' : 'Au moins une majuscule (A-Z)' }}</p>
-                  } @else if (hasError('password','noNumber')) {
-                    <p class="pv-input-error-msg">{{ i18n.currentLang() === 'ar' ? 'رقم واحد على الأقل (0-9)' : i18n.currentLang() === 'en' ? 'At least one digit (0-9)' : 'Au moins un chiffre (0-9)' }}</p>
                   }
                 </div>
 
@@ -203,23 +205,6 @@
                   }
                 </div>
 
-                <!-- CGU -->
-                <div class="flex items-start gap-3 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
-                  <input type="checkbox" formControlName="terms" id="terms-check"
-                         class="w-[18px] h-[18px] accent-emerald-500 cursor-pointer mt-0.5 shrink-0" />
-                  <label for="terms-check" class="text-xs text-white/55 cursor-pointer leading-relaxed">
-                    @if (i18n.currentLang() === 'ar') {
-                      أوافق على <a href="#" class="text-emerald-400 font-semibold no-underline hover:underline">شروط الاستخدام</a> و <a href="#" class="text-emerald-400 font-semibold no-underline hover:underline">سياسة الخصوصية</a> لـ PlantVerde.
-                    } @else if (i18n.currentLang() === 'en') {
-                      I accept the <a href="#" class="text-emerald-400 font-semibold no-underline hover:underline">terms of use</a> and the <a href="#" class="text-emerald-400 font-semibold no-underline hover:underline">privacy policy</a> of PlantVerde.
-                    } @else {
-                      J'accepte les <a href="#" class="text-emerald-400 font-semibold no-underline hover:underline">conditions d'utilisation</a> et la <a href="#" class="text-emerald-400 font-semibold no-underline hover:underline">politique de confidentialité</a> de PlantVerde.
-                    }
-                  </label>
-                </div>
-                @if (f('terms').invalid && f('terms').touched) {
-                  <p class="pv-input-error-msg">{{ i18n.currentLang() === 'ar' ? 'يجب عليك قبول الشروط' : i18n.currentLang() === 'en' ? 'You must accept the terms' : 'Vous devez accepter les conditions' }}</p>
-                }
               </div>
 
               <div class="flex gap-3 mt-6">

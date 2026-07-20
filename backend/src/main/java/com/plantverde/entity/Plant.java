@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "plants")
@@ -35,8 +36,11 @@ public class Plant {
     @Builder.Default
     private Integer stock = 0;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "plant_images", joinColumns = @JoinColumn(name = "plant_id"))
     @Column(name = "image_url")
-    private String imageUrl;
+    @Builder.Default
+    private List<String> images = new java.util.ArrayList<>();
 
     // Conseils d'entretien
     @Column(name = "watering_frequency", length = 50)
@@ -64,6 +68,10 @@ public class Plant {
     @Column(nullable = false)
     @Builder.Default
     private boolean active = true;
+
+    @Column(name = "plant_of_the_month")
+    @Builder.Default
+    private Boolean plantOfTheMonth = false;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")

@@ -94,7 +94,7 @@
 
       @if (loading()) {
         <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
-          @for (s of skeletons; track s) {
+          @for (s of skeletons; track $index) {
             <div class="rounded-3xl overflow-hidden bg-white/[0.03] border border-white/5 p-4 flex flex-col gap-4">
               <div class="h-44 rounded-2xl pv-shimmer"></div>
               <div class="flex flex-col gap-2">
@@ -135,9 +135,15 @@
                     <span class="color-white/70 text-sm font-bold border border-white/20 px-4 py-1.5 rounded-full bg-black/40">{{ t.catalogue_rupture }}</span>
                   </div>
                 }
-                <div class="pv-card-img">
+                <div class="pv-card-img relative overflow-hidden rounded-[24px]">
                   <div class="pv-card-glow"></div>
-                  <span class="pv-card-emoji">🪴</span>
+                  @if (plant.images && plant.images.length > 0) {
+                    <img [src]="plant.images[0]" class="w-full h-full object-cover relative z-10" />
+                  } @else if (plant.imageUrl) {
+                    <img [src]="plant.imageUrl" class="w-full h-full object-cover relative z-10" />
+                  } @else {
+                    <span class="pv-card-emoji">🪴</span>
+                  }
                 </div>
                 <div class="pv-card-body">
                   <div class="pv-card-cat">{{ plant.category?.name }}</div>

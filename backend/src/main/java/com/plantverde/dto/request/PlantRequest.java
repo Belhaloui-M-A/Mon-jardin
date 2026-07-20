@@ -16,12 +16,12 @@ public record PlantRequest(
     String description,
     @NotNull @Positive BigDecimal price,
     @NotNull @Min(0) Integer stock,
-    String imageUrl,
     @Size(max = 50) String wateringFrequency,
     @Size(max = 50) String lightRequirement,
     Plant.DifficultyLevel difficultyLevel,
     @Size(max = 50) String adultSize,
     Boolean toxicForAnimals,
     @Min(0) @Max(100) Integer discountPercent,
-    Boolean active
+    Boolean active,
+    Boolean plantOfTheMonth
 ) {}

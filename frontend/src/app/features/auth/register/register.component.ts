@@ -14,8 +14,6 @@ import { I18nService } from '../../../core/services/i18n.service';
 function passwordStrength(control: AbstractControl): ValidationErrors | null {
   const v = control.value || '';
   if (v.length < 8)                      return { tooShort: true };
-  if (!/[A-Z]/.test(v))                  return { noUppercase: true };
-  if (!/[0-9]/.test(v))                  return { noNumber: true };
   return null;
 }
 
@@ -40,8 +38,6 @@ export class RegisterComponent {
     const v = this.form.get('password')?.value || '';
     let s = 0;
     if (v.length >= 8)       s++;
-    if (/[A-Z]/.test(v))     s++;
-    if (/[0-9]/.test(v))     s++;
     if (/[^A-Za-z0-9]/.test(v)) s++;
     return s;
   }
@@ -70,12 +66,11 @@ export class RegisterComponent {
     this.form = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       lastName:  ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-      phone:     ['', [Validators.pattern(/^(0)[5-7][0-9]{8}$/)]],
-      address:   [''],
+      phone:     ['', [Validators.required, Validators.pattern(/^(0)[5-7][0-9]{8}$/)]],
+      address:   ['', Validators.required],
       email:     ['', [Validators.required, Validators.email]],
       password:  ['', [Validators.required, passwordStrength]],
-      confirm:   ['', Validators.required],
-      terms:     [false, Validators.requiredTrue],
+      confirm:   ['', Validators.required]
     }, { validators: this.confirmMatch });
   }
 
@@ -86,7 +81,7 @@ export class RegisterComponent {
   }
 
   nextStep(): void {
-    const step1Fields = ['firstName','lastName','phone'];
+    const step1Fields = ['firstName','lastName','phone', 'address'];
     step1Fields.forEach(f => this.form.get(f)?.markAsTouched());
     const valid = step1Fields.every(f => this.form.get(f)?.valid);
     if (valid) this.step.set(2);
