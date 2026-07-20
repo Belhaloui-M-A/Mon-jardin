@@ -23,7 +23,7 @@ export const authInterceptor: HttpInterceptorFn = (
   const router = inject(Router);
 
   // Ajoute withCredentials à toutes les requêtes /api
-  const authReq = req.url.startsWith('/api')
+  const authReq = req.url.includes('/api')
     ? req.clone({ withCredentials: true })
     : req;
 
