@@ -204,23 +204,51 @@
         }
       </div>
     } @else {
-      <a routerLink="/auth/login" class="nav-link">{{ t.nav_login }}</a>
-      <a
-        routerLink="/auth/register"
-        class="pv-btn-primary"
-        style="padding: 8px 20px; font-size: 13px; border-radius: 30px"
-      >
+      <a routerLink="/auth/login"    class="nav-link hidden md:inline-block">{{ t.nav_login }}</a>
+      <a routerLink="/auth/register" class="pv-btn-primary hidden md:inline-block" style="padding:8px 20px;font-size:13px;border-radius:30px">
         {{ t.nav_register }}
       </a>
     }
+
+    <!-- Menu Hamburger (Mobile) -->
+    <button class="md:hidden text-white/70 hover:text-white p-2" (click)="isMobileMenuOpen = !isMobileMenuOpen">
+      <i class="pi" [ngClass]="isMobileMenuOpen ? 'pi-times' : 'pi-bars'" style="font-size: 20px"></i>
+    </button>
   </div>
 </header>
 
+<!-- Mobile Menu Dropdown -->
+@if (isMobileMenuOpen) {
+  <div class="md:hidden fixed top-[72px] inset-x-0 bg-black/95 backdrop-blur-xl border-b border-white/10 z-[100] px-4 py-6 flex flex-col gap-4 shadow-2xl">
+    <a routerLink="/" routerLinkActive="text-emerald-400" [routerLinkActiveOptions]="{exact: true}" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_home }}</a>
+    <a routerLink="/catalogue" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_catalogue }}</a>
+    <a routerLink="/reviews" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.review_label }}</a>
+    
+    @if (isLoggedIn && !isAdmin) {
+      <a routerLink="/orders" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_orders }}</a>
+      <a routerLink="/wishlist" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_wishlist }}</a>
+    }
+    
+    @if (isAdmin) {
+      <a routerLink="/admin" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_dashboard }}</a>
+      <a routerLink="/admin/plants" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_plants }}</a>
+      <a routerLink="/admin/categories" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_categories }}</a>
+      <a routerLink="/admin/orders" routerLinkActive="text-emerald-400" class="mobile-nav-link" (click)="isMobileMenuOpen = false">{{ t.nav_orders }}</a>
+    }
+
+    @if (!isLoggedIn) {
+      <div class="h-px bg-white/10 my-2"></div>
+      <a routerLink="/auth/login" class="mobile-nav-link text-center" (click)="isMobileMenuOpen = false">{{ t.nav_login }}</a>
+      <a routerLink="/auth/register" class="pv-btn-primary w-full justify-center" (click)="isMobileMenuOpen = false">{{ t.nav_register }}</a>
+    }
+  </div>
+}
+
 <!-- Overlay pour fermer les menus au clic extérieur -->
-@if (isMenuOpen || isLangOpen) {
+@if (isMenuOpen || isLangOpen || isMobileMenuOpen) {
   <div
     style="position: fixed; inset: 0; z-index: 90"
-    (click)="isMenuOpen = false; isLangOpen = false"
+    (click)="isMenuOpen = false; isLangOpen = false; isMobileMenuOpen = false"
   ></div>
 }
 
@@ -240,6 +268,21 @@
   .nav-link.active {
     color: #4ade80;
     background: rgba(74, 222, 128, 0.1);
+  }
+
+  .mobile-nav-link {
+    display: block;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .mobile-nav-link:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
   }
 
   /* === LANGUAGE SELECTOR === */
