@@ -1,23 +1,15 @@
 <!-- HERO -->
-<section class="pv-hero">
+<section class="pv-hero px-4 md:px-8">
   <div style="max-width: 720px; margin: 0 auto">
     <div class="pv-hero-badge">
-      <span
-        style="
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: #4ade80;
-          animation: pv-pulse 2s infinite;
-        "
-      ></span>
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
       {{ t.home_badge }}
     </div>
-    <h1 class="pv-hero-title">
+    <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-4 text-white">
       {{ t.home_title1 }}<br />
       <span class="pv-grad">{{ t.home_title2 }}</span>
     </h1>
-    <p class="pv-hero-sub">
+    <p class="text-base sm:text-lg text-white/60 mb-8 max-w-2xl mx-auto">
       Des plantes soigneusement sélectionnées — intérieur, succulentes,
       aromatiques et tropicales — livrées avec leurs conseils d'entretien
       personnalisés.
@@ -36,7 +28,7 @@
     </div> -->
 
     <!-- Stats -->
-    <div class="stats-bar">
+    <div class="stats-bar flex flex-wrap justify-center gap-6 md:gap-12 mt-12 mb-8">
       @for (s of stats; track s.label) {
         <div class="stat-item">
           <div class="stat-num">{{ s.value }}</div>
@@ -56,11 +48,11 @@
 </section>
 
 <!-- CATÉGORIES -->
-<section style="padding: 0 2rem 80px; position: relative; z-index: 1">
+<section class="px-4 md:px-8 pb-10 md:pb-20 relative z-10">
   <div style="text-align: center; margin-bottom: 40px">
     <div class="pv-section-label">{{ t.home_collections }}</div>
-    <h2 class="pv-section-title">{{ t.home_collections_title }}</h2>
-    <p class="pv-section-sub">{{ t.home_collections_sub }}</p>
+    <h2 class="text-3xl md:text-4xl font-black mb-4">{{ t.home_collections_title }}</h2>
+    <p class="text-sm md:text-base text-white/60 max-w-xl mx-auto">{{ t.home_collections_sub }}</p>
   </div>
   <div class="cat-grid">
     @for (c of categories(); track c.id) {
@@ -79,54 +71,34 @@
 
 <!-- PLANTE VEDETTE -->
 @if (plantOfTheMonth()) {
-<section style="padding: 0 2rem 80px; position: relative; z-index: 1">
+<section class="px-4 md:px-8 pb-10 md:pb-20 relative z-10">
   <div style="text-align: center; margin-bottom: 40px">
     <div class="pv-section-label">{{ t.home_featured_label }}</div>
-    <h2 class="pv-section-title">{{ t.home_featured_title }}</h2>
+    <h2 class="text-3xl md:text-4xl font-black mb-4">{{ t.home_featured_title }}</h2>
   </div>
   <div class="featured-3d">
     <div class="featured-visual pv-float">
       <div class="featured-glow"></div>
       @if (plantOfTheMonth()?.images && plantOfTheMonth()!.images!.length > 0) {
-        <img [src]="plantOfTheMonth()?.images?.[0]" [alt]="plantOfTheMonth()?.name" class="w-full h-full object-cover rounded-[32px] relative z-10" />
+        <img [src]="plantOfTheMonth()?.images?.[0]" [alt]="plantOfTheMonth()?.name" class="w-full h-full object-cover rounded-[28px] relative z-10" />
       } @else if (plantOfTheMonth()?.imageUrl) {
-        <img [src]="plantOfTheMonth()?.imageUrl" [alt]="plantOfTheMonth()?.name" class="w-full h-full object-cover rounded-[32px] relative z-10" />
+        <img [src]="plantOfTheMonth()?.imageUrl" [alt]="plantOfTheMonth()?.name" class="w-full h-full object-cover rounded-[28px] relative z-10" />
       } @else {
-        <span style="font-size: 120px; position: relative; z-index: 1">🌿</span>
+        <span class="text-[80px] md:text-[120px] relative z-10">🌿</span>
       }
     </div>
-    <div class="featured-info">
-      <div class="pv-section-label">{{ plantOfTheMonth()?.category?.name }} • Stock limité</div>
-      <h2
-        style="
-          font-size: 48px;
-          font-weight: 900;
-          letter-spacing: -2px;
-          line-height: 1.1;
-        "
-      >
+    <div class="featured-info text-center md:text-left">
+      <div class="pv-section-label mx-auto md:mx-0">{{ plantOfTheMonth()?.category?.name }} • Stock limité</div>
+      <h2 class="text-3xl md:text-[48px] font-black tracking-tight leading-tight mb-2">
         {{ plantOfTheMonth()?.name }}
       </h2>
-      <p
-        style="
-          font-style: italic;
-          color: rgba(255, 255, 255, 0.4);
-          margin: 8px 0 20px;
-        "
-      >
+      <p class="italic text-white/40 mb-5">
         {{ plantOfTheMonth()?.species }}
       </p>
-      <p
-        style="
-          color: rgba(255, 255, 255, 0.6);
-          line-height: 1.7;
-          margin-bottom: 24px;
-          font-size: 15px;
-        "
-      >
+      <p class="text-white/60 leading-relaxed mb-6 text-sm md:text-base">
         {{ plantOfTheMonth()?.description }}
       </p>
-      <div class="flex flex-wrap gap-2 mb-6">
+      <div class="flex flex-wrap justify-center md:justify-start gap-2 mb-6">
         @if (plantOfTheMonth()?.wateringFrequency) {
           <span class="pv-info-tag pv-info-tag-green">💧 {{ plantOfTheMonth()?.wateringFrequency }}</span>
         }
@@ -137,10 +109,10 @@
           <span class="pv-info-tag pv-info-tag-amber">📏 {{ plantOfTheMonth()?.adultSize }}</span>
         }
       </div>
-      <div class="flex items-center gap-5">
-        <span style="font-size: 40px; font-weight: 900; color: #4ade80"
-          >{{ plantOfTheMonth()?.price }} DA</span
-        >
+      <div class="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 sm:gap-5">
+        <span class="text-3xl md:text-[40px] font-black text-emerald-400">
+          {{ plantOfTheMonth()?.price }} DA
+        </span>
         <a [routerLink]="['/catalogue', plantOfTheMonth()?.id]" class="pv-btn-primary">
           <i class="pi pi-shopping-cart"></i> Voir la plante
         </a>
@@ -151,11 +123,11 @@
 }
 
 <!-- PLANTES VEDETTES -->
-<section style="padding: 0 2rem 80px; position: relative; z-index: 1">
-  <div class="flex items-center justify-between mb-10">
+<section class="px-4 md:px-8 pb-10 md:pb-20 relative z-10">
+  <div class="flex flex-col sm:flex-row items-center sm:justify-between gap-4 mb-10 text-center sm:text-left">
     <div>
-      <div class="pv-section-label">{{ t.home_catalogue_label }}</div>
-      <h2 class="pv-section-title">{{ t.home_catalogue_title }}</h2>
+      <div class="pv-section-label mx-auto sm:mx-0">{{ t.home_catalogue_label }}</div>
+      <h2 class="text-3xl md:text-4xl font-black mb-0">{{ t.home_catalogue_title }}</h2>
     </div>
     <a
       routerLink="/catalogue"
@@ -227,92 +199,44 @@
 
 <!-- SECTION AVIS CLIENTS (home teaser) -->
 <section
-  style="padding: 0 2rem 80px; position: relative; z-index: 1"
+  class="px-4 md:px-8 pb-10 md:pb-20 relative z-10"
   *ngIf="false"
 >
   <!-- placeholder -->
 </section>
-<section style="padding: 0 2rem 80px; position: relative; z-index: 1">
+<section class="px-4 md:px-8 pb-10 md:pb-20 relative z-10">
   <div style="text-align: center; margin-bottom: 40px">
     <div class="pv-section-label">{{ t.review_label }}</div>
-    <h2 class="pv-section-title">{{ t.review_title }}</h2>
-    <p class="pv-section-sub">{{ t.review_sub }}</p>
+    <h2 class="text-3xl md:text-4xl font-black mb-4">{{ t.review_title }}</h2>
+    <p class="text-sm md:text-base text-white/60 max-w-xl mx-auto">{{ t.review_sub }}</p>
   </div>
-  <div
-    style="
-      display: flex;
-      gap: 14px;
-      overflow-x: auto;
-      padding-bottom: 8px;
-      max-width: 1100px;
-      margin: 0 auto;
-    "
-  >
+  <div class="flex gap-4 overflow-x-auto pb-4 w-full scroll-smooth max-w-[1100px] mx-auto snap-x snap-mandatory">
     @for (r of homeReviews(); track r.id) {
       <div
-        style="
-          flex-shrink: 0;
-          width: 260px;
-          background: rgba(255, 255, 255, 0.04);
-          border: 1px solid rgba(255, 255, 255, 0.07);
-          border-radius: 20px;
-          padding: 20px;
-          transition: all 0.25s;
-        "
-        class="hover:-translate-y-1 hover:border-green-500/20"
+        class="shrink-0 w-[260px] bg-white/5 border border-white/10 rounded-2xl p-5 transition-all duration-250 hover:-translate-y-1 hover:border-green-500/20 snap-center"
       >
-        <div
-          style="
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            margin-bottom: 12px;
-          "
-        >
+        <div class="flex items-center gap-1 mb-3">
           @for (i of starRange(r.rating); track i) {
-            <span style="color: #fbbf24; font-size: 16px">★</span>
+            <span class="text-amber-400 text-base">★</span>
           }
           @for (i of emptyRange(r.rating); track i) {
-            <span style="color: rgba(255, 255, 255, 0.12); font-size: 16px"
-              >★</span
-            >
+            <span class="text-white/10 text-base">★</span>
           }
         </div>
         @if (r.comment) {
-          <p
-            style="
-              font-size: 13px;
-              color: rgba(255, 255, 255, 0.6);
-              line-height: 1.6;
-              font-style: italic;
-              margin-bottom: 14px;
-            "
-          >
+          <p class="text-[13px] text-white/60 leading-relaxed italic mb-3.5">
             "{{ r.comment }}"
           </p>
         }
-        <div style="display: flex; align-items: center; gap: 8px">
-          <div
-            style="
-              width: 30px;
-              height: 30px;
-              border-radius: 50%;
-              background: linear-gradient(135deg, #16a34a, #22c55e);
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-size: 11px;
-              font-weight: 800;
-              color: #fff;
-            "
-          >
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-600 to-green-500 flex items-center justify-center text-[11px] font-extrabold text-white">
             {{ r.user.firstName[0] }}{{ r.user.lastName[0] }}
           </div>
           <div>
-            <p style="font-size: 12px; font-weight: 600; color: #fff">
+            <p class="text-[12px] font-semibold text-white">
               {{ r.user.firstName }} {{ r.user.lastName[0] }}.
             </p>
-            <p style="font-size: 10px; color: rgba(255, 255, 255, 0.3)">
+            <p class="text-[10px] text-white/30">
               {{ r.createdAt | date: "dd/MM/yyyy" }}
             </p>
           </div>
@@ -331,38 +255,23 @@
   </div>
 </section>
 <!-- CTA -->
-<section style="padding: 0 2rem 100px; position: relative; z-index: 1">
+<section class="px-4 md:px-8 pb-10 md:pb-20 relative z-10">
   <div class="cta-3d">
     <div class="cta-glow"></div>
     <div style="position: relative; z-index: 1; text-align: center">
-      <h2
-        style="
-          font-size: 38px;
-          font-weight: 900;
-          letter-spacing: -1.5px;
-          margin-bottom: 16px;
-        "
-      >
+      <h2 class="text-3xl md:text-5xl font-black tracking-tight mb-4">
         {{ t.home_cta_title }}
       </h2>
-      <p
-        style="
-          color: rgba(255, 255, 255, 0.6);
-          margin-bottom: 32px;
-          font-size: 16px;
-          max-width: 500px;
-          margin-left: auto;
-          margin-right: auto;
-        "
-      >
-        {{ t.home_cta_sub }}
+      <p class="text-sm md:text-lg text-white/60 max-w-xl mx-auto mb-8">
+        Rejoignez notre communauté de passionnés. Créez un compte
+        gratuitement pour enregistrer vos favoris et commander facilement.
       </p>
       <a
-        routerLink="/catalogue"
+        routerLink="/auth/register"
         class="pv-btn-primary"
-        style="font-size: 16px; padding: 16px 40px"
+        style="padding: 14px 36px; font-size: 16px"
       >
-        <i class="pi pi-shopping-bag"></i> Commencer mes achats
+        <i class="pi pi-user-plus"></i> {{ t.nav_register }}
       </a>
     </div>
   </div>
@@ -470,10 +379,10 @@
     max-width: 1100px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    grid-template-columns: 1fr;
+    gap: 30px;
     align-items: center;
-    padding: 56px;
+    padding: 30px 20px;
     border-radius: 32px;
     background: linear-gradient(
       135deg,
@@ -484,8 +393,15 @@
     position: relative;
     overflow: hidden;
   }
+  @media (min-width: 768px) {
+    .featured-3d {
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      padding: 56px;
+    }
+  }
   .featured-visual {
-    height: 380px;
+    height: 250px;
     border-radius: 28px;
     background: rgba(74, 222, 128, 0.03);
     border: 1px solid rgba(74, 222, 128, 0.1);
@@ -493,6 +409,11 @@
     align-items: center;
     justify-content: center;
     position: relative;
+  }
+  @media (min-width: 768px) {
+    .featured-visual {
+      height: 380px;
+    }
   }
   .featured-glow {
     position: absolute;
@@ -510,10 +431,16 @@
   }
   .plant-grid-3d {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
     max-width: 1100px;
     margin: 0 auto;
+  }
+  @media (min-width: 640px) {
+    .plant-grid-3d {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 18px;
+    }
   }
   .skeleton-card {
     border-radius: 24px;
@@ -522,9 +449,14 @@
     border: 1px solid rgba(255, 255, 255, 0.06);
   }
   .skeleton-img {
-    height: 200px;
+    height: 150px;
     background: rgba(255, 255, 255, 0.04);
     animation: shimmer 1.8s infinite;
+  }
+  @media (min-width: 640px) {
+    .skeleton-img {
+      height: 200px;
+    }
   }
   .skeleton-lines {
     padding: 16px;
@@ -537,15 +469,9 @@
     margin-bottom: 8px;
     animation: shimmer 1.8s infinite;
   }
-  .w-80 {
-    width: 80%;
-  }
-  .w-60 {
-    width: 60%;
-  }
-  .w-40 {
-    width: 40%;
-  }
+  .w-80 { width: 80%; }
+  .w-60 { width: 60%; }
+  .w-40 { width: 40%; }
   @keyframes shimmer {
     0%,
     100% {
@@ -557,7 +483,7 @@
   }
   .cta-3d {
     border-radius: 32px;
-    padding: 80px 40px;
+    padding: 40px 20px;
     text-align: center;
     background: linear-gradient(
       135deg,
@@ -570,19 +496,31 @@
     position: relative;
     overflow: hidden;
   }
+  @media (min-width: 768px) {
+    .cta-3d {
+      padding: 80px 40px;
+    }
+  }
   .cta-glow {
     position: absolute;
     top: -100px;
     left: 50%;
     transform: translateX(-50%);
-    width: 400px;
-    height: 400px;
+    width: 250px;
+    height: 250px;
     border-radius: 50%;
     background: radial-gradient(
       circle,
       rgba(74, 222, 128, 0.08),
       transparent 70%
     );
-    filter: blur(40px);
+    filter: blur(30px);
+  }
+  @media (min-width: 768px) {
+    .cta-glow {
+      width: 400px;
+      height: 400px;
+      filter: blur(40px);
+    }
   }
 </style>

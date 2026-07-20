@@ -44,6 +44,7 @@
 }
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 body {
   font-family: "Plus Jakarta Sans", sans-serif;
@@ -51,17 +52,23 @@ body {
   color: var(--pv-text-primary);
   min-height: 100vh;
   overflow-x: hidden;
+  width: 100%;
 }
 
 /* ============================================================
    PAGE LAYOUT & CONTAINER WIDTHS
    ============================================================ */
 .pv-page-container {
-  padding: 80px 2rem;
+  padding: 40px 1rem;
   position: relative;
   z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
+}
+@media (min-width: 768px) {
+  .pv-page-container {
+    padding: 80px 2rem;
+  }
 }
 .pv-page-container-sm {
   padding: 80px 2rem;
