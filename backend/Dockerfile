@@ -20,15 +20,15 @@ RUN --mount=type=cache,target=/root/.m2 \
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
+# Créer le groupe et l'utilisateur, puis créer le répertoire uploads avec les bons droits
+RUN addgroup -S plantverde && adduser -S plantverde -G plantverde \
+    && mkdir -p /app/uploads && chown -R plantverde:plantverde /app
+
 # Utilisateur non-root (bonne pratique sécurité)
-RUN addgroup -S plantverde && adduser -S plantverde -G plantverde
 USER plantverde
 
 # Copier le JAR buildé
 COPY --from=builder /app/target/*.jar app.jar
-
-# Répertoire uploads
-RUN mkdir -p /app/uploads
 
 EXPOSE 8080
 
