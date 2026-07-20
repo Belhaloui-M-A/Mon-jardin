@@ -71,8 +71,12 @@ public class CookieService {
             .append(name).append('=').append(value)
             .append("; Max-Age=").append(maxAge)
             .append("; Path=").append(path)
-            .append("; HttpOnly; SameSite=Strict");
-        if (secure) sb.append("; Secure");
+            .append("; HttpOnly");
+        if (secure) {
+            sb.append("; SameSite=None; Secure"); // Requis pour les requêtes Cross-Origin (Vercel -> Render)
+        } else {
+            sb.append("; SameSite=Lax"); // Pour le développement local (localhost HTTP)
+        }
         return sb.toString();
     }
 }
