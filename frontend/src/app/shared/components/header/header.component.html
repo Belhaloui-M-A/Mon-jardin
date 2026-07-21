@@ -56,7 +56,7 @@
   <!-- Actions droite -->
   <div class="flex items-center gap-2 shrink-0">
     <!-- === SÉLECTEUR DE LANGUE === -->
-    <div class="lang-selector" [class.open]="isLangOpen">
+    <div class="lang-selector hidden md:block" [class.open]="isLangOpen">
       <button
         class="lang-btn"
         (click)="isLangOpen = !isLangOpen"
@@ -118,7 +118,7 @@
 
     <!-- === TOGGLE THÈME === -->
     <button
-      class="theme-toggle-btn"
+      class="theme-toggle-btn !hidden md:!flex"
       (click)="toggleTheme()"
       [attr.aria-label]="isDark() ? 'Mode clair' : 'Mode sombre'"
       [title]="isDark() ? 'Passer en mode clair' : 'Passer en mode sombre'"
@@ -230,8 +230,8 @@
         }
       </div>
     } @else {
-      <a routerLink="/auth/login"    class="nav-link hidden md:inline-flex">{{ t.nav_login }}</a>
-      <a routerLink="/auth/register" class="pv-btn-primary hidden md:inline-flex" style="padding:8px 20px;font-size:13px;border-radius:30px;white-space:nowrap">
+      <a routerLink="/auth/login"    class="nav-link !hidden md:!inline-flex">{{ t.nav_login }}</a>
+      <a routerLink="/auth/register" class="pv-btn-primary !hidden md:!inline-flex" style="padding:8px 20px;font-size:13px;border-radius:30px;white-space:nowrap">
         {{ t.nav_register }}
       </a>
     }
@@ -245,7 +245,7 @@
 
 <!-- Mobile Navigation Menu (Fullscreen) -->
 @if (isMobileNavOpen) {
-  <div class="fixed inset-0 z-[100] flex flex-col" style="background-color: #050b07; background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 20px 20px;">
+  <div class="fixed inset-0 z-[100] flex flex-col mobile-menu-bg">
     <!-- Top bar inside menu -->
     <div class="flex justify-end p-6">
       <button (click)="isMobileNavOpen = false" class="text-white/60 hover:text-white p-2">
@@ -278,8 +278,22 @@
       </div>
     </div>
     
-    <!-- Theme Toggles -->
-    <div class="p-8 pb-12 flex justify-center">
+    <!-- Theme & Lang Toggles -->
+    <div class="p-8 pb-12 flex flex-col items-center gap-6">
+       <!-- Language Selector -->
+       <div class="flex items-center gap-4">
+         @for (lang of languages; track lang.code) {
+           <button 
+             class="flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-colors border"
+             [ngClass]="currentLang === lang.code ? 'bg-emerald-500 text-black border-emerald-500' : 'text-white border-white/20'"
+             (click)="setLang(lang.code); isMobileNavOpen = false">
+             <span>{{ lang.flag }}</span>
+             <span>{{ lang.short }}</span>
+           </button>
+         }
+       </div>
+       
+       <!-- Theme Toggle -->
        <div class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full p-1.5">
          <button class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300" [class.bg-emerald-500]="!isDark()" [class.text-black]="!isDark()" [class.text-white]="isDark()" (click)="isDark.set(false)"><i class="pi pi-sun"></i></button>
          <button class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300" [class.bg-emerald-500]="isDark()" [class.text-black]="isDark()" [class.text-white]="!isDark()" (click)="isDark.set(true)"><i class="pi pi-moon"></i></button>
@@ -595,6 +609,7 @@
   }
   .theme-toggle-thumb {
     position: absolute;
+    left: 0;
     top: 50%;
     transform: translateY(-50%) translateX(2px);
     width: 18px;
@@ -612,5 +627,15 @@
     transform: translateY(-50%) translateX(22px);
     background: rgba(74, 222, 128, 0.9);
     color: #071410;
+  }
+  
+  /* RTL Theme Toggle */
+  [dir="rtl"] .theme-toggle-thumb {
+    left: auto;
+    right: 0;
+    transform: translateY(-50%) translateX(-2px);
+  }
+  [dir="rtl"] .theme-toggle-thumb.dark {
+    transform: translateY(-50%) translateX(-22px);
   }
 </style>

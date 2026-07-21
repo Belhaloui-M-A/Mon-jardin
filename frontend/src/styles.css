@@ -1311,11 +1311,8 @@ body {
    RTL SUPPORT (Arabic)
    ============================================================ */
 [dir="rtl"] body,
-[dir="rtl"] * {
+[dir="rtl"] *:not(.pi):not(.fa):not([class*="pi-"]) {
   font-family: var(--pv-font, "Plus Jakarta Sans", sans-serif);
-}
-[dir="rtl"] .pv-nav {
-  flex-direction: row-reverse;
 }
 [dir="rtl"] .pv-hero-title,
 [dir="rtl"] .pv-section-title,
@@ -1502,4 +1499,23 @@ body {
 [data-theme="light"] .pv-status-cancelled {
   color: #dc2626 !important;
   border-color: rgba(220, 38, 38, 0.3) !important;
+}
+
+/* ============================================================
+   MOBILE MENU BG
+   ============================================================ */
+.mobile-menu-bg {
+  background-color: #050b07;
+  background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+[data-theme="light"] .mobile-menu-bg {
+  background-color: #f8fafc;
+  background-image: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
+}
+
+@media (max-width: 768px) {
+  .pv-hero {
+    padding-top: 130px;
+  }
 }
