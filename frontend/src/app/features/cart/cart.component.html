@@ -22,7 +22,15 @@
         @for (item of cart.items(); track item.id) {
           <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 bg-white/5 border border-white/10 rounded-2xl transition-all hover:border-emerald-400/30">
             <!-- Image -->
-            <div class="w-16 h-16 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-3xl shrink-0 select-none">🪴</div>
+            <div class="w-16 h-16 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-3xl shrink-0 select-none overflow-hidden relative">
+              @if (item.plant.images && item.plant.images.length > 0) {
+                <img [src]="item.plant.images[0]" class="w-full h-full object-cover relative z-10" alt="">
+              } @else if (item.plant.imageUrl) {
+                <img [src]="item.plant.imageUrl" class="w-full h-full object-cover relative z-10" alt="">
+              } @else {
+                🪴
+              }
+            </div>
 
             <!-- Infos -->
             <div class="flex-1 min-w-0">

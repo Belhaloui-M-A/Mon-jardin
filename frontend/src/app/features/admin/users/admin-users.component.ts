@@ -8,13 +8,16 @@ import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
-import { User } from '../../../core/models/models';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { User, SiteSettings } from '../../../core/models/models';
 import { I18nService } from '../../../core/services/i18n.service';
+import { SiteSettingsService } from '../../../core/services/site-settings.service';
 
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ButtonModule, TableModule, TagModule, ToastModule, DialogModule],
+  imports: [CommonModule, ReactiveFormsModule, ButtonModule, TableModule, TagModule, ToastModule, DialogModule, InputTextModule, InputTextareaModule],
   templateUrl: './admin-users.component.html'
 })
 export class AdminUsersComponent implements OnInit {
@@ -22,8 +25,11 @@ export class AdminUsersComponent implements OnInit {
   loading = signal(true);
   
   displayCreateModal = signal(false);
+  displaySettingsModal = signal(false);
   userForm: FormGroup;
+  settingsForm: FormGroup;
   submitting = signal(false);
+  savingSettings = signal(false);
 
   private fb = inject(FormBuilder);
 
@@ -32,7 +38,8 @@ export class AdminUsersComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private toast: MessageService,
-    public i18n: I18nService
+    public i18n: I18nService,
+    public siteSettingsService: SiteSettingsService
   ) {
     this.userForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
@@ -41,10 +48,20 @@ export class AdminUsersComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(8)]],
       role: ['CLIENT', Validators.required]
     });
+
+    this.settingsForm = this.fb.group({
+      emailContact: ['', [Validators.required, Validators.email]],
+      phoneContact: ['', Validators.required],
+      addressFr: ['', Validators.required],
+      addressAr: ['', Validators.required],
+      descriptionFr: ['', Validators.required],
+      descriptionAr: ['', Validators.required],
+    });
   }
 
   ngOnInit(): void {
     this.loadUsers();
+    this.siteSettingsService.fetchSettings();
   }
 
   loadUsers(): void {
@@ -90,6 +107,34 @@ export class AdminUsersComponent implements OnInit {
           summary: updated.enabled ? this.t.admin_users_active : this.t.admin_users_disabled,
           detail: `${user.firstName} ${user.lastName}`
         });
+      }
+    });
+  }
+
+  showSettingsModal(): void {
+    const current = this.siteSettingsService.settings();
+    if (current) {
+      this.settingsForm.patchValue(current);
+    }
+    this.displaySettingsModal.set(true);
+  }
+
+  saveSettings(): void {
+    if (this.settingsForm.invalid) {
+      this.settingsForm.markAllAsTouched();
+      return;
+    }
+
+    this.savingSettings.set(true);
+    this.siteSettingsService.updateSettings(this.settingsForm.value).subscribe({
+      next: () => {
+        this.savingSettings.set(false);
+        this.displaySettingsModal.set(false);
+        this.toast.add({ severity: 'success', summary: 'Succès', detail: 'Informations mises à jour' });
+      },
+      error: () => {
+        this.savingSettings.set(false);
+        this.toast.add({ severity: 'error', summary: 'Erreur', detail: 'Impossible de mettre à jour' });
       }
     });
   }

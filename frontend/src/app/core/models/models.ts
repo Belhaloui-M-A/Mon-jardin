@@ -7,7 +7,7 @@ export interface User {
   lastName: string;
   phone?: string;
   address?: string;
-  role: 'ADMIN' | 'CLIENT';
+  role: "ADMIN" | "CLIENT";
   enabled: boolean;
   createdAt?: string;
 }
@@ -16,7 +16,7 @@ export interface AuthResponse {
   email: string;
   firstName: string;
   lastName: string;
-  role: 'ADMIN' | 'CLIENT';
+  role: "ADMIN" | "CLIENT";
   message: string;
 }
 
@@ -25,6 +25,20 @@ export interface Category {
   name: string;
   description?: string;
   imageUrl?: string;
+}
+
+export interface Cart {
+  items: CartItem[];
+}
+
+export interface SiteSettings {
+  id?: number;
+  emailContact: string;
+  phoneContact: string;
+  addressFr: string;
+  addressAr: string;
+  descriptionFr: string;
+  descriptionAr: string;
 }
 
 export interface Plant {
@@ -38,7 +52,7 @@ export interface Plant {
   images?: string[];
   wateringFrequency?: string;
   lightRequirement?: string;
-  difficultyLevel?: 'FACILE' | 'MOYEN' | 'DIFFICILE';
+  difficultyLevel?: "FACILE" | "MOYEN" | "DIFFICILE";
   adultSize?: string;
   toxicForAnimals?: boolean;
   discountPercent?: number;
@@ -62,7 +76,12 @@ export interface WishlistItem {
   createdAt?: string;
 }
 
-export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+export type OrderStatus =
+  | "PENDING"
+  | "CONFIRMED"
+  | "SHIPPED"
+  | "DELIVERED"
+  | "CANCELLED";
 
 export interface OrderItem {
   id: number;
@@ -120,17 +139,17 @@ export interface DashboardStats {
 }
 
 export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
-  PENDING: 'En attente',
-  CONFIRMED: 'Confirmée',
-  SHIPPED: 'Expédiée',
-  DELIVERED: 'Livrée',
-  CANCELLED: 'Annulée'
+  PENDING: "En attente",
+  CONFIRMED: "Confirmée",
+  SHIPPED: "Expédiée",
+  DELIVERED: "Livrée",
+  CANCELLED: "Annulée",
 };
 
 export const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
-  PENDING: 'warn',
-  CONFIRMED: 'info',
-  SHIPPED: 'primary',
-  DELIVERED: 'success',
-  CANCELLED: 'danger'
+  PENDING: "warn",
+  CONFIRMED: "info",
+  SHIPPED: "primary",
+  DELIVERED: "success",
+  CANCELLED: "danger",
 };

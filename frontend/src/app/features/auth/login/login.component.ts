@@ -6,6 +6,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/plant-cart.service';
@@ -15,12 +16,14 @@ import { I18nService } from '../../../core/services/i18n.service';
   selector: 'app-login',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, CommonModule,
-            InputTextModule, PasswordModule, ButtonModule, ToastModule],
+            InputTextModule, PasswordModule, ButtonModule, ToastModule, DialogModule],
   templateUrl: './login.component.html'
 })
 export class LoginComponent {
   form: FormGroup;
   loading = false;
+  displayDeactivatedPopup = false;
+  deactivatedMessage = '';
 
   get t() { return this.i18n.t(); }
 
@@ -45,11 +48,19 @@ export class LoginComponent {
 
     this.auth.login(email, password).subscribe({
       next: user => {
-        this.cart.loadCart().subscribe();
+        if (user.role !== 'ADMIN') {
+          this.cart.loadCart().subscribe();
+        }
         this.router.navigate(user.role === 'ADMIN' ? ['/admin'] : ['/catalogue']);
       },
       error: err => {
-        this.toast.add({ severity: 'error', summary: 'Erreur', detail: err.error?.message || 'Identifiants incorrects' });
+        const errorMsg = err.error?.message || 'Identifiants incorrects';
+        if (errorMsg.includes('désactivé')) {
+          this.deactivatedMessage = errorMsg;
+          this.displayDeactivatedPopup = true;
+        } else {
+          this.toast.add({ severity: 'error', summary: 'Erreur', detail: errorMsg });
+        }
         this.loading = false;
       }
     });

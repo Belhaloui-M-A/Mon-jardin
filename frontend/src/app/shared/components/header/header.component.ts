@@ -2,9 +2,11 @@ import { Component, signal, effect, PLATFORM_ID, Inject } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { CommonModule } from "@angular/common";
+import { HttpClient } from "@angular/common/http";
 import { AuthService } from "../../../core/services/auth.service";
 import { CartService } from "../../../core/services/plant-cart.service";
 import { I18nService, Lang } from "../../../core/services/i18n.service";
+import { OrderService } from "../../../core/services/order-wishlist.service";
 
 @Component({
   selector: "app-header",
@@ -23,11 +25,14 @@ export class HeaderComponent {
   ];
 
   isDark = signal<boolean>(true);
+  private pollingInterval: any;
 
   constructor(
     public auth: AuthService,
     public cart: CartService,
     public i18n: I18nService,
+    private http: HttpClient,
+    public orderService: OrderService,
     @Inject(PLATFORM_ID) private platformId: object,
   ) {
     if (isPlatformBrowser(this.platformId)) {
@@ -35,13 +40,33 @@ export class HeaderComponent {
       const dark = saved ? saved === 'dark' : true;
       this.isDark.set(dark);
       this.applyTheme(dark);
+
+      // Poll pending orders count if admin
+      this.pollingInterval = setInterval(() => {
+        if (this.auth.isAdmin()) {
+          this.orderService.fetchPendingOrdersCount();
+        }
+      }, 10000); // 10 seconds
     }
     effect(() => {
       this.applyTheme(this.isDark());
       if (isPlatformBrowser(this.platformId)) {
         localStorage.setItem('pv_theme', this.isDark() ? 'dark' : 'light');
       }
+      
+      // Initial fetch if admin becomes true
+      if (this.auth.isAdmin()) {
+         this.orderService.fetchPendingOrdersCount();
+      }
     });
+  }
+
+  get pendingOrdersCount() {
+    return this.orderService.pendingOrdersCount;
+  }
+
+  ngOnDestroy() {
+    if (this.pollingInterval) clearInterval(this.pollingInterval);
   }
 
   get t() {

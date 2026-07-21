@@ -9,7 +9,7 @@
           <span class="font-extrabold text-xl text-white">PlantVerde</span>
         </div>
         <p class="text-sm text-white/60 leading-relaxed mb-5 max-w-sm">
-          {{ i18n.currentLang() === 'ar' ? 'متجرك الإلكتروني لبيع النباتات في الجزائر. نباتات مختارة بعناية مع نصائح مخصصة للعناية بها.' : 'Votre boutique de plantes en ligne en Algérie. Des plantes soigneusement sélectionnées, livrées avec leurs conseils d\'entretien.' }}
+          {{ i18n.currentLang() === 'ar' ? (siteSettingsService.settings()?.descriptionAr || 'متجرك الإلكتروني لبيع النباتات في الجزائر. نباتات مختارة بعناية مع نصائح مخصصة للعناية بها.') : (siteSettingsService.settings()?.descriptionFr || 'Votre boutique de plantes en ligne en Algérie. Des plantes soigneusement sélectionnées, livrées avec leurs conseils d\'entretien.') }}
         </p>
         <div class="flex flex-wrap items-center gap-2">
           <span class="text-[11px] md:text-xs px-3 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/20">{{ t.footer_delivery }}</span>
@@ -34,15 +34,15 @@
         <div class="flex flex-col gap-2.5">
           <div class="footer-contact">
             <i class="pi pi-envelope text-emerald-400 text-xs"></i>
-            <a href="mailto:contact@plantverde.dz" class="footer-link">contact&#64;plantverde.dz</a>
+            <a [href]="'mailto:' + (siteSettingsService.settings()?.emailContact || 'contact@plantverde.dz')" class="footer-link">{{ siteSettingsService.settings()?.emailContact || 'contact@plantverde.dz' }}</a>
           </div>
           <div class="footer-contact">
             <i class="pi pi-phone text-emerald-400 text-xs"></i>
-            <span class="text-[13px] md:text-sm text-white/60">05555555</span>
+            <span class="text-[13px] md:text-sm text-white/60">{{ siteSettingsService.settings()?.phoneContact || '05555555' }}</span>
           </div>
           <div class="footer-contact">
             <i class="pi pi-map-marker text-emerald-400 text-xs"></i>
-            <span class="text-[13px] md:text-sm text-white/60">{{ i18n.currentLang() === 'ar' ? 'تيارت، الجزائر' : 'Tiaret, Algérie' }}</span>
+            <span class="text-[13px] md:text-sm text-white/60">{{ i18n.currentLang() === 'ar' ? (siteSettingsService.settings()?.addressAr || 'تيارت، الجزائر') : (siteSettingsService.settings()?.addressFr || 'Tiaret, Algérie') }}</span>
           </div>
           <div class="footer-contact">
             <i class="pi pi-clock text-white/30 text-xs"></i>

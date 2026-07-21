@@ -33,8 +33,8 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Charger le panier si connecté
-    if (this.authService.isLoggedIn()) {
+    // Charger le panier si connecté (et non admin)
+    if (this.authService.isLoggedIn() && !this.authService.isAdmin()) {
       this.cartService.loadCart().subscribe();
     }
   }

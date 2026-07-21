@@ -47,9 +47,12 @@
       <a
         routerLink="/admin/orders"
         routerLinkActive="active"
-        class="nav-link whitespace-nowrap"
-        >{{ t.nav_orders }}</a
-      >
+        class="nav-link whitespace-nowrap flex items-center gap-1.5"
+        >{{ t.nav_orders }}
+        @if (pendingOrdersCount() > 0) {
+          <span class="bg-emerald-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">{{ pendingOrdersCount() }}</span>
+        }
+      </a>
     }
   </nav>
 
@@ -265,7 +268,15 @@
       }
       
       @if (isAdmin) {
-        <a routerLink="/admin" (click)="isMobileNavOpen = false" class="text-3xl font-semibold text-white/60 transition-colors" routerLinkActive="!text-emerald-400">{{ t.nav_dashboard }}</a>
+        <a routerLink="/admin" (click)="isMobileNavOpen = false" class="text-3xl font-semibold text-white/60 transition-colors" routerLinkActive="!text-emerald-400" [routerLinkActiveOptions]="{exact:true}">{{ t.nav_dashboard }}</a>
+        <a routerLink="/admin/plants" (click)="isMobileNavOpen = false" class="text-3xl font-semibold text-white/60 transition-colors" routerLinkActive="!text-emerald-400">{{ t.nav_plants }}</a>
+        <a routerLink="/admin/categories" (click)="isMobileNavOpen = false" class="text-3xl font-semibold text-white/60 transition-colors" routerLinkActive="!text-emerald-400">{{ t.nav_categories }}</a>
+        <a routerLink="/admin/orders" (click)="isMobileNavOpen = false" class="text-3xl font-semibold text-white/60 transition-colors flex items-center gap-3" routerLinkActive="!text-emerald-400">
+          {{ t.nav_orders }}
+          @if (pendingOrdersCount() > 0) {
+            <span class="bg-emerald-500 text-black text-sm font-bold px-2 py-1 rounded-full min-w-[24px] text-center">{{ pendingOrdersCount() }}</span>
+          }
+        </a>
       }
 
       <div class="mt-4 flex flex-col gap-4 w-full max-w-[200px]">

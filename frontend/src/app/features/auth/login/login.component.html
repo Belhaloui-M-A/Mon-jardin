@@ -47,3 +47,24 @@
     </div>
   </div>
 </div>
+
+<p-dialog [(visible)]="displayDeactivatedPopup" [modal]="true" [dismissableMask]="true" [draggable]="false" [resizable]="false" [style]="{ width: '90vw', maxWidth: '400px' }">
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center">
+        <i class="pi pi-lock text-xl"></i>
+      </div>
+      <span class="text-xl font-bold text-white">{{ i18n.currentLang() === 'ar' ? 'حساب معطل' : 'Compte Désactivé' }}</span>
+    </div>
+  </ng-template>
+  
+  <div class="py-4">
+    <p class="text-white/80 leading-relaxed text-center">
+      {{ deactivatedMessage }}
+    </p>
+  </div>
+  
+  <ng-template pTemplate="footer">
+    <button pButton label="OK" (click)="displayDeactivatedPopup = false" class="w-full py-3 rounded-xl font-bold bg-emerald-500 text-black border-none"></button>
+  </ng-template>
+</p-dialog>

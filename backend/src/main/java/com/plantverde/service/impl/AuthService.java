@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class AuthService {
     private final CookieService cookieService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final SiteSettingsService siteSettingsService;
 
     @Transactional
     public AuthResponse register(RegisterRequest request, HttpServletResponse response) {
@@ -65,6 +67,10 @@ public class AuthService {
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password())
             );
+        } catch (DisabledException e) {
+            String phone = siteSettingsService.getSettings().getPhoneContact();
+            String email = siteSettingsService.getSettings().getEmailContact();
+            throw new BusinessException("Désolé, votre compte a été désactivé. Contactez l'admin (" + phone + " / " + email + ") pour le réactiver.");
         } catch (BadCredentialsException e) {
             throw new BusinessException("Email ou mot de passe incorrect");
         }
@@ -73,7 +79,9 @@ public class AuthService {
             .orElseThrow(() -> new BusinessException("Utilisateur non trouvé"));
 
         if (!user.isEnabled()) {
-            throw new BusinessException("Compte désactivé. Contactez l'administrateur.");
+            String phone = siteSettingsService.getSettings().getPhoneContact();
+            String email = siteSettingsService.getSettings().getEmailContact();
+            throw new BusinessException("Désolé, votre compte a été désactivé. Contactez l'admin (" + phone + " / " + email + ") pour le réactiver.");
         }
 
         String ip = extractClientIp(httpRequest);

@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGeneral(Exception ex) {
         log.error("Erreur inattendue : ", ex);
         return ResponseEntity.internalServerError()
-            .body(new ErrorResponse("Une erreur interne s'est produite", 500));
+            .body(new ErrorResponse("Erreur interne: " + ex.getMessage() + " | " + ex.getClass().getName(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
     }
 
     public record ErrorResponse(String message, int status) {

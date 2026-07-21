@@ -60,4 +60,9 @@ public class AdminStatsController {
 
         return ResponseEntity.ok(stats);
     }
+
+    @GetMapping("/pending-orders-count")
+    public ResponseEntity<Long> getPendingOrdersCount() {
+        return ResponseEntity.ok(orderRepository.countPendingOrders());
+    }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Order, OrderStatus, Page, WishlistItem } from '../models/models';
@@ -7,7 +7,16 @@ import { Order, OrderStatus, Page, WishlistItem } from '../models/models';
 export class OrderService {
   private readonly API = '/api/orders';
 
+  public pendingOrdersCount = signal<number>(0);
+
   constructor(private http: HttpClient) {}
+
+  fetchPendingOrdersCount(): void {
+    this.http.get<number>('/api/admin/stats/pending-orders-count').subscribe({
+      next: count => this.pendingOrdersCount.set(count),
+      error: () => {}
+    });
+  }
 
   placeOrder(data: {
     deliveryAddress: string;

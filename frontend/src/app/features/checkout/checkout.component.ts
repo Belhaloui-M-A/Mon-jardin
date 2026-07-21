@@ -62,6 +62,7 @@ export class CheckoutComponent implements OnInit {
         this.orderPlaced = true;
         this.orderId = order.id;
         this.loading = false;
+        this.orderService.fetchPendingOrdersCount();
       },
       error: err => {
         this.toast.add({ severity: 'error', summary: 'Erreur', detail: err.error?.message });
