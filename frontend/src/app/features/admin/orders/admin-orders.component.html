@@ -56,6 +56,7 @@
             <div class="flex justify-end">
               @if (order.status !== 'CANCELLED' && order.status !== 'DELIVERED') {
                 <p-dropdown [options]="getNextStatuses(order.status)" optionLabel="label" optionValue="value"
+                            appendTo="body"
                             [placeholder]="i18n.currentLang() === 'ar' ? 'تغيير...' : 'Changer...'"
                             styleClass="text-xs rounded-xl"
                             (onChange)="updateStatus(order.id, $event.value)">

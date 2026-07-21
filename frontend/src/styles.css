@@ -1402,3 +1402,104 @@ body {
 [data-theme="light"] .pv-view-btn.active {
   color: var(--pv-green-600) !important;
 }
+
+/* Orders Progress Bar & Items */
+.pv-step-icon-bg {
+  background: rgba(255, 255, 255, 0.08);
+}
+.pv-step-icon-bg.active {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+.pv-step-icon {
+  color: rgba(255, 255, 255, 0.3);
+}
+.pv-step-icon.active {
+  color: #fff;
+}
+.pv-step-text {
+  color: rgba(255, 255, 255, 0.3);
+}
+.pv-step-text.active {
+  color: #4ade80;
+}
+.pv-step-line {
+  background: rgba(255, 255, 255, 0.06);
+}
+.pv-step-line.active {
+  background: linear-gradient(90deg, #16a34a, #4ade80);
+}
+.pv-item-price {
+  color: #34d399;
+}
+
+[data-theme="light"] .pv-step-icon-bg {
+  background: rgba(0, 0, 0, 0.04);
+}
+[data-theme="light"] .pv-step-icon {
+  color: rgba(0, 0, 0, 0.2);
+}
+[data-theme="light"] .pv-step-text {
+  color: rgba(0, 0, 0, 0.3);
+}
+[data-theme="light"] .pv-step-text.active {
+  color: var(--pv-green-600);
+}
+[data-theme="light"] .pv-step-line {
+  background: rgba(0, 0, 0, 0.06);
+}
+[data-theme="light"] .pv-item-price {
+  color: var(--pv-green-600) !important;
+}
+
+/* Order Status Badges */
+.pv-status-badge {
+  text-transform: uppercase;
+  border-width: 1px;
+}
+.pv-status-pending {
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.25);
+}
+.pv-status-confirmed {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.25);
+}
+.pv-status-shipped {
+  background: rgba(167, 139, 250, 0.12);
+  color: #a78bfa;
+  border-color: rgba(167, 139, 250, 0.25);
+}
+.pv-status-delivered {
+  background: rgba(74, 222, 128, 0.12);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.25);
+}
+.pv-status-cancelled {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+[data-theme="light"] .pv-status-pending {
+  color: #d97706 !important;
+  border-color: rgba(217, 119, 6, 0.3) !important;
+}
+[data-theme="light"] .pv-status-confirmed {
+  color: #0284c7 !important;
+  border-color: rgba(2, 132, 199, 0.3) !important;
+}
+[data-theme="light"] .pv-status-shipped {
+  color: #7c3aed !important;
+  border-color: rgba(124, 58, 237, 0.3) !important;
+}
+[data-theme="light"] .pv-status-delivered {
+  color: #16a34a !important;
+  border-color: rgba(22, 163, 74, 0.3) !important;
+}
+[data-theme="light"] .pv-status-cancelled {
+  color: #dc2626 !important;
+  border-color: rgba(220, 38, 38, 0.3) !important;
+}
