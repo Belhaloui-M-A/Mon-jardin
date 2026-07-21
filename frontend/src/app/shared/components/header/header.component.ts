@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { Component, signal, effect, PLATFORM_ID, Inject } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { AuthService } from "../../../core/services/auth.service";
@@ -17,15 +18,30 @@ export class HeaderComponent {
 
   languages = [
     { code: "fr" as Lang, label: "Français", flag: "🇫🇷", short: "FR" },
-    { code: "en" as Lang, label: "English", flag: "🇬🇧", short: "EN" },
     { code: "ar" as Lang, label: "العربية", flag: "🇩🇿", short: "عر" },
   ];
+
+  isDark = signal<boolean>(true);
 
   constructor(
     public auth: AuthService,
     public cart: CartService,
     public i18n: I18nService,
-  ) {}
+    @Inject(PLATFORM_ID) private platformId: object,
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      const saved = localStorage.getItem('pv_theme');
+      const dark = saved ? saved === 'dark' : true;
+      this.isDark.set(dark);
+      this.applyTheme(dark);
+    }
+    effect(() => {
+      this.applyTheme(this.isDark());
+      if (isPlatformBrowser(this.platformId)) {
+        localStorage.setItem('pv_theme', this.isDark() ? 'dark' : 'light');
+      }
+    });
+  }
 
   get t() {
     return this.i18n.t();
@@ -66,5 +82,15 @@ export class HeaderComponent {
 
   logout(): void {
     this.auth.logout();
+  }
+
+  toggleTheme(): void {
+    this.isDark.set(!this.isDark());
+  }
+
+  private applyTheme(dark: boolean): void {
+    if (isPlatformBrowser(this.platformId)) {
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    }
   }
 }

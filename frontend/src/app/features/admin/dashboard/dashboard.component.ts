@@ -59,12 +59,12 @@ export class DashboardComponent implements OnInit {
       scales: {
         x: {
           grid: { display: false },
-          ticks: { color: 'rgba(255,255,255,0.35)', font: { size: 11 } },
-          border: { color: 'rgba(255,255,255,0.08)' }
+          ticks: { color: '#94a3b8', font: { size: 11 } },
+          border: { color: 'rgba(148, 163, 184, 0.2)' }
         },
         y: {
-          grid: { color: 'rgba(255,255,255,0.05)' },
-          ticks: { color: 'rgba(255,255,255,0.35)', font: { size: 11 } },
+          grid: { color: 'rgba(148, 163, 184, 0.1)' },
+          ticks: { color: '#94a3b8', font: { size: 11 } },
           border: { color: 'transparent' },
           beginAtZero: true
         }

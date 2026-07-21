@@ -46,7 +46,7 @@ export class AdminOrdersComponent implements OnInit {
     this.orderService.updateStatus(id, status).subscribe({
       next: updated => {
         this.orders.update(list => list.map(o => o.id === id ? updated : o));
-        const summaryMsg = this.i18n.currentLang() === 'ar' ? 'تم تحديث الحالة' : this.i18n.currentLang() === 'en' ? 'Status updated' : 'Statut mis à jour';
+        const summaryMsg = this.i18n.currentLang() === 'ar' ? 'تم تحديث الحالة' : 'Statut mis à jour';
         this.toast.add({ severity: 'success', summary: summaryMsg, detail: `Commande #${id} → ${this.getLabel(status)}` });
       },
       error: err => this.toast.add({ severity: 'error', summary: 'Erreur', detail: err.error?.message })

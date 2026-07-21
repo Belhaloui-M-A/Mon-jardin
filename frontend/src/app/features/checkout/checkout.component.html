@@ -11,7 +11,7 @@
         {{ t.checkout_success_title }}
       </h1>
       <p class="text-base text-white/60 mb-2">
-        {{ i18n.currentLang() === 'ar' ? 'الطلب' : i18n.currentLang() === 'en' ? 'Order' : 'Commande' }}
+        {{ i18n.currentLang() === 'ar' ? 'الطلب' : 'Commande' }}
         <strong class="text-emerald-400">#{{ orderId }}</strong>. {{ t.checkout_success_sub }}
       </p>
       <p class="text-sm text-white/40 mb-10">
@@ -50,7 +50,7 @@
                      [class.ng-invalid]="f('deliveryAddress').invalid && f('deliveryAddress').touched" />
               @if (f('deliveryAddress').invalid && f('deliveryAddress').touched) {
                 <p class="pv-input-error-msg">
-                  {{ i18n.currentLang() === 'ar' ? 'العنوان مطلوب' : i18n.currentLang() === 'en' ? 'Address is required' : 'Adresse requise' }}
+                  {{ i18n.currentLang() === 'ar' ? 'العنوان مطلوب' : 'Adresse requise' }}
                 </p>
               }
             </div>
@@ -60,7 +60,7 @@
                      [class.ng-invalid]="f('deliveryCity').invalid && f('deliveryCity').touched" />
               @if (f('deliveryCity').invalid && f('deliveryCity').touched) {
                 <p class="pv-input-error-msg">
-                  {{ i18n.currentLang() === 'ar' ? 'المدينة مطلوبة' : i18n.currentLang() === 'en' ? 'City is required' : 'Ville requise' }}
+                  {{ i18n.currentLang() === 'ar' ? 'المدينة مطلوبة' : 'Ville requise' }}
                 </p>
               }
             </div>
@@ -70,7 +70,7 @@
                      [class.ng-invalid]="f('deliveryPhone').invalid && f('deliveryPhone').touched" />
               @if (f('deliveryPhone').invalid && f('deliveryPhone').touched) {
                 <p class="pv-input-error-msg">
-                  {{ i18n.currentLang() === 'ar' ? 'رقم الهاتف مطلوب' : i18n.currentLang() === 'en' ? 'Phone is required' : 'Téléphone requis' }}
+                  {{ i18n.currentLang() === 'ar' ? 'رقم الهاتف مطلوب' : 'Téléphone requis' }}
                 </p>
               }
             </div>

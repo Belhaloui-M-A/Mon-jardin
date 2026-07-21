@@ -196,14 +196,14 @@ export class AdminPlantsComponent implements OnInit {
   confirmDelete(plant: Plant): void {
     this.confirm.confirm({
       message: `${this.t.admin_plant_delete_confirm} (${plant.name})`,
-      header: this.i18n.currentLang() === 'ar' ? 'تأكيد' : this.i18n.currentLang() === 'en' ? 'Confirmation' : 'Confirmation',
+      header: this.i18n.currentLang() === 'ar' ? 'تأكيد' : 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: this.i18n.currentLang() === 'ar' ? 'حذف' : this.i18n.currentLang() === 'en' ? 'Delete' : 'Supprimer',
+      acceptLabel: this.i18n.currentLang() === 'ar' ? 'حذف' : 'Supprimer',
       rejectLabel: this.t.admin_cancel,
       accept: () => {
         this.plantService.delete(plant.id).subscribe({
           next: () => {
-            this.toast.add({ severity: 'success', summary: this.i18n.currentLang() === 'ar' ? 'تم الحذف' : this.i18n.currentLang() === 'en' ? 'Deleted' : 'Supprimé', detail: plant.name });
+            this.toast.add({ severity: 'success', summary: this.i18n.currentLang() === 'ar' ? 'تم الحذف' : 'Supprimé', detail: plant.name });
             this.loadPlants();
           }
         });

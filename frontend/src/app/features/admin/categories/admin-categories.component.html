@@ -12,9 +12,7 @@
         {{
           i18n.currentLang() === "ar"
             ? "إدارة الفئات"
-            : i18n.currentLang() === "en"
-              ? "Category Management"
-              : "Gestion des catégories"
+            : "Gestion des catégories"
         }}
       </h1>
       <p class="text-sm text-white/40 mt-1.5">
@@ -28,9 +26,7 @@
         [label]="
           i18n.currentLang() === 'ar'
             ? 'فئة جديدة'
-            : i18n.currentLang() === 'en'
-              ? 'New category'
-              : 'Nouvelle catégorie'
+            : 'Nouvelle catégorie'
         "
         (click)="openNew()"
         class="px-5 py-2.5 rounded-xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 border-none shadow-[0_4px_16px_rgba(34,197,94,0.3)] transition-all hover:scale-[1.02]"
@@ -106,9 +102,7 @@
             {{
               i18n.currentLang() === "ar"
                 ? "لا توجد فئات"
-                : i18n.currentLang() === "en"
-                  ? "No categories"
-                  : "Aucune catégorie"
+                : "Aucune catégorie"
             }}
           </td>
         </tr>
@@ -122,14 +116,10 @@
       editing()
         ? i18n.currentLang() === 'ar'
           ? 'تعديل الفئة'
-          : i18n.currentLang() === 'en'
-            ? 'Edit category'
-            : 'Modifier la catégorie'
+          : 'Modifier la catégorie'
         : i18n.currentLang() === 'ar'
           ? 'فئة جديدة'
-          : i18n.currentLang() === 'en'
-            ? 'New category'
-            : 'Nouvelle catégorie'
+          : 'Nouvelle catégorie'
     "
     [(visible)]="dialogVisible"
     [modal]="true"

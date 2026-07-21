@@ -11,7 +11,8 @@
   <!-- Barre recherche -->
   <div class="relative w-full max-w-lg mb-9">
     <i class="pi pi-search absolute start-4 top-1/2 -translate-y-1/2 text-white/30 text-base"></i>
-    <input pInputText [value]="filterForm.get('search')!.value"
+    <input type="text"
+           [value]="filterForm.get('search')!.value"
            (input)="filterForm.get('search')!.setValue($any($event.target).value)"
            [placeholder]="t.catalogue_search"
            class="w-full ps-11 py-3 rounded-full bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-emerald-400 focus:shadow-[0_0_0_3px_rgba(74,222,128,0.1)] transition-all" />
@@ -70,7 +71,7 @@
         <!-- Reset -->
         <button type="button" (click)="resetFilters()"
                 class="w-full py-2.5 rounded-xl border border-white/10 bg-transparent text-white/50 text-xs font-semibold cursor-pointer hover:bg-white/5 hover:text-white transition-all">
-          ↺ {{ t.catalogue_reset }}
+          {{ t.catalogue_reset }}
         </button>
       </form>
     </aside>
@@ -80,14 +81,14 @@
       <!-- Barre tri/résultats -->
       <div class="flex items-center justify-between mb-5">
         <span class="text-sm text-white/50">
-          <strong class="text-white font-bold">{{ totalRecords() }}</strong> {{ i18n.currentLang() === 'ar' ? 'نباتات' : i18n.currentLang() === 'en' ? 'plants' : 'plantes' }}
+          <strong class="text-white font-bold">{{ totalRecords() }}</strong> {{ i18n.currentLang() === 'ar' ? 'نباتات' : 'plantes' }}
         </span>
         <div class="flex gap-2">
           <button pButton icon="pi pi-th-large" [text]="true" size="small"
-                  [style]="{'color': viewMode==='grid' ? '#34d399' : 'rgba(255,255,255,.4)' }"
+                  class="pv-view-btn" [class.active]="viewMode === 'grid'"
                   (click)="viewMode='grid'"></button>
           <button pButton icon="pi pi-list" [text]="true" size="small"
-                  [style]="{'color': viewMode==='list' ? '#34d399' : 'rgba(255,255,255,.4)' }"
+                  class="pv-view-btn" [class.active]="viewMode === 'list'"
                   (click)="viewMode='list'"></button>
         </div>
       </div>
@@ -175,11 +176,19 @@
           <div class="flex flex-col gap-2.5">
             @for (plant of plants(); track plant.id) {
               <a [routerLink]="['/catalogue', plant.id]" class="plant-list-item">
-                <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-3xl shrink-0">🪴</div>
+                <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-3xl shrink-0 overflow-hidden relative">
+                  @if (plant.images && plant.images.length > 0) {
+                    <img [src]="plant.images[0]" class="w-full h-full object-cover" />
+                  } @else if (plant.imageUrl) {
+                    <img [src]="plant.imageUrl" class="w-full h-full object-cover" />
+                  } @else {
+                    🪴
+                  }
+                </div>
                 <div class="flex-1 min-w-0">
                   <div class="font-bold text-sm text-white">{{ plant.name }}</div>
-                  <div class="text-[11px] text-white/50 italic">{{ plant.species }}</div>
-                  <div class="text-[11px] text-emerald-400 mt-0.5">{{ plant.category?.name }}</div>
+                  <div class="text-[11px] text-white/50 italic pv-card-species" style="margin-bottom:0">{{ plant.species }}</div>
+                  <div class="pv-card-cat mt-0.5" style="margin-bottom:0">{{ plant.category?.name }}</div>
                 </div>
                 <span class="pv-tag-diff"
                       [class.pv-tag-facile]="plant.difficultyLevel === 'FACILE'"
@@ -187,7 +196,7 @@
                       [class.pv-diff-difficile]="plant.difficultyLevel === 'DIFFICILE'">
                   {{ plant.difficultyLevel === 'FACILE' ? t.diff_easy : plant.difficultyLevel === 'MOYEN' ? t.diff_medium : t.diff_hard }}
                 </span>
-                <span class="text-base font-extrabold text-emerald-400 shrink-0 whitespace-nowrap">
+                <span class="pv-card-price shrink-0 whitespace-nowrap">
                   {{ getFinalPrice(plant) | number:'1.0-0' }} DA
                 </span>
               </a>

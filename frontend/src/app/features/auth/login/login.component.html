@@ -21,7 +21,7 @@
                  [class.ng-invalid]="email.invalid && email.touched" [class.ng-dirty]="email.touched" />
           @if (email.invalid && email.touched) {
             <p class="pv-input-error-msg">
-              {{ i18n.currentLang() === 'ar' ? 'البريد الإلكتروني غير صالح' : i18n.currentLang() === 'en' ? 'Invalid email' : 'Email invalide' }}
+              {{ i18n.currentLang() === 'ar' ? 'البريد الإلكتروني غير صالح' : 'Email invalide' }}
             </p>
           }
         </div>
@@ -31,7 +31,7 @@
                       styleClass="w-full" inputStyleClass="w-full" placeholder="••••••••" />
           @if (password.invalid && password.touched) {
             <p class="pv-input-error-msg">
-              {{ i18n.currentLang() === 'ar' ? 'كلمة المرور مطلوبة' : i18n.currentLang() === 'en' ? 'Password required' : 'Mot de passe requis' }}
+              {{ i18n.currentLang() === 'ar' ? 'كلمة المرور مطلوبة' : 'Mot de passe requis' }}
             </p>
           }
         </div>

@@ -187,17 +187,13 @@ export class AdminCategoriesComponent implements OnInit {
       message:
         this.i18n.currentLang() === "ar"
           ? `حذف الفئة "${category.name}"؟`
-          : this.i18n.currentLang() === "en"
-            ? `Delete category "${category.name}"?`
-            : `Supprimer la catégorie "${category.name}" ?`,
+          : `Supprimer la catégorie "${category.name}" ?`,
       header: this.i18n.currentLang() === "ar" ? "تأكيد" : "Confirmation",
       icon: "pi pi-exclamation-triangle",
       acceptLabel:
         this.i18n.currentLang() === "ar"
           ? "حذف"
-          : this.i18n.currentLang() === "en"
-            ? "Delete"
-            : "Supprimer",
+          : "Supprimer",
       rejectLabel: this.t.admin_cancel,
       accept: () => {
         this.categoryService.delete(category.id).subscribe({
@@ -207,9 +203,7 @@ export class AdminCategoriesComponent implements OnInit {
               summary:
                 this.i18n.currentLang() === "ar"
                   ? "تم الحذف"
-                  : this.i18n.currentLang() === "en"
-                    ? "Deleted"
-                    : "Supprimée",
+                  : "Supprimée",
               detail: category.name,
             });
             this.loadCategories();

@@ -7,7 +7,7 @@
       <div class="pv-section-label">{{ t.admin_label }}</div>
       <h1 class="pv-section-title">{{ t.admin_orders_title }}</h1>
       <p class="text-sm text-white/40 mt-1.5">
-        {{ orders().length }} {{ i18n.currentLang() === 'ar' ? 'طلبات' : i18n.currentLang() === 'en' ? 'orders' : 'commandes' }}
+        {{ orders().length }} {{ i18n.currentLang() === 'ar' ? 'طلبات' : 'commandes' }}
       </p>
     </div>
   </div>
@@ -56,7 +56,7 @@
             <div class="flex justify-end">
               @if (order.status !== 'CANCELLED' && order.status !== 'DELIVERED') {
                 <p-dropdown [options]="getNextStatuses(order.status)" optionLabel="label" optionValue="value"
-                            [placeholder]="i18n.currentLang() === 'ar' ? 'تغيير...' : i18n.currentLang() === 'en' ? 'Change...' : 'Changer...'"
+                            [placeholder]="i18n.currentLang() === 'ar' ? 'تغيير...' : 'Changer...'"
                             styleClass="text-xs rounded-xl"
                             (onChange)="updateStatus(order.id, $event.value)">
                 </p-dropdown>

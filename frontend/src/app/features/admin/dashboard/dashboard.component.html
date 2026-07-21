@@ -40,7 +40,7 @@
         <div class="pv-kpi-value text-sky-400">{{ stats()!.totalClients }}</div>
         <div class="pv-kpi-label">{{ t.admin_clients }}</div>
         <div class="pv-kpi-trend text-sky-400">
-          {{ i18n.currentLang() === 'ar' ? 'الحسابات النشطة' : i18n.currentLang() === 'en' ? 'Active accounts' : 'Comptes actifs' }}
+          {{ i18n.currentLang() === 'ar' ? 'الحسابات النشطة' : 'Comptes actifs' }}
         </div>
       </div>
       <div class="pv-kpi-card">
@@ -64,7 +64,7 @@
           </div>
         } @else {
           <div class="h-[220px] flex items-center justify-center text-white/35 text-sm">
-            {{ i18n.currentLang() === 'ar' ? 'لا توجد بيانات متاحة' : i18n.currentLang() === 'en' ? 'No data available' : 'Aucune donnée disponible' }}
+            {{ i18n.currentLang() === 'ar' ? 'لا توجد بيانات متاحة' : 'Aucune donnée disponible' }}
           </div>
         }
       </div>
@@ -108,7 +108,7 @@
               <span class="text-xs font-bold">{{ p.name }}</span>
               <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border"
                     [ngClass]="p.stock === 0 ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'">
-                {{ p.stock }} {{ i18n.currentLang() === 'ar' ? 'وحدات' : i18n.currentLang() === 'en' ? 'units' : 'unités' }}
+                {{ p.stock }} {{ i18n.currentLang() === 'ar' ? 'وحدات' : 'unités' }}
               </span>
             </a>
           }
