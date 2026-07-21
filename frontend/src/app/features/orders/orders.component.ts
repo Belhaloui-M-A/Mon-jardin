@@ -13,7 +13,6 @@ import { I18nService, Translations } from '../../core/services/i18n.service';
   selector: 'app-orders',
   standalone: true,
   imports: [CommonModule, RouterLink, ButtonModule, TagModule, ToastModule],
-  providers: [MessageService],
   templateUrl: './orders.component.html'
 })
 export class OrdersComponent implements OnInit {

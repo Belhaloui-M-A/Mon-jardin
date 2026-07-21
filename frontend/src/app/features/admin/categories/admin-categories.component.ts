@@ -36,7 +36,7 @@ import { I18nService } from "../../../core/services/i18n.service";
     ToastModule,
     ConfirmDialogModule,
   ],
-  providers: [MessageService, ConfirmationService],
+  providers: [ConfirmationService],
   templateUrl: "./admin-categories.component.html",
 })
 export class AdminCategoriesComponent implements OnInit {

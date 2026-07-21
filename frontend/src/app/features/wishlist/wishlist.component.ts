@@ -13,7 +13,6 @@ import { I18nService } from '../../core/services/i18n.service';
   selector: 'app-wishlist',
   standalone: true,
   imports: [CommonModule, RouterLink, ButtonModule, ToastModule],
-  providers: [MessageService],
   templateUrl: './wishlist.component.html'
 })
 export class WishlistComponent implements OnInit {
@@ -40,7 +39,7 @@ export class WishlistComponent implements OnInit {
 
   addToCart(item: WishlistItem): void {
     this.cartService.add(item.plant.id).subscribe({
-      next: () => this.toast.add({ severity: 'success', summary: 'Panier', detail: `${item.plant.name} ajouté` }),
+      next: () => this.toast.add({ severity: 'success', summary: '✓', detail: `La plante '${item.plant.name}' est au panier` }),
       error: err => this.toast.add({ severity: 'error', summary: 'Erreur', detail: err.error?.message })
     });
   }

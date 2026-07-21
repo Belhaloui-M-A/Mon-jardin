@@ -16,7 +16,6 @@ import { I18nService } from '../../../core/services/i18n.service';
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, CommonModule,
             InputTextModule, PasswordModule, ButtonModule, ToastModule],
-  providers: [MessageService],
   templateUrl: './login.component.html'
 })
 export class LoginComponent {

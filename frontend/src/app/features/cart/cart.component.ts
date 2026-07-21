@@ -12,7 +12,6 @@ import { I18nService } from '../../core/services/i18n.service';
   selector: 'app-cart',
   standalone: true,
   imports: [RouterLink, CommonModule, ButtonModule, ToastModule],
-  providers: [MessageService],
   templateUrl: './cart.component.html'
 })
 export class CartComponent implements OnInit {

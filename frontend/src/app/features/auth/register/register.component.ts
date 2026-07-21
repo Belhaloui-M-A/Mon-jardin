@@ -22,7 +22,6 @@ function passwordStrength(control: AbstractControl): ValidationErrors | null {
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, CommonModule,
             InputTextModule, PasswordModule, ButtonModule, ToastModule],
-  providers: [MessageService],
   templateUrl: './register.component.html'
 })
 export class RegisterComponent {

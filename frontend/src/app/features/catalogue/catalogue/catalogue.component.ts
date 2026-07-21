@@ -25,7 +25,6 @@ import { AuthService } from '../../../core/services/auth.service';
             ButtonModule, InputTextModule, DropdownModule,
             SliderModule, PaginatorModule, SkeletonModule,
             CheckboxModule, ToastModule],
-  providers: [MessageService],
   templateUrl: './catalogue.component.html'
 })
 export class CatalogueComponent implements OnInit {
@@ -125,7 +124,7 @@ export class CatalogueComponent implements OnInit {
     this.addingToCart.set(plant.id);
     this.cartService.add(plant.id).subscribe({
       next: () => {
-        this.toast.add({ severity: 'success', summary: 'Ajouté !', detail: `${plant.name} ajouté au panier` });
+        this.toast.add({ severity: 'success', summary: '✓', detail: `La plante '${plant.name}' est au panier` });
         this.addingToCart.set(null);
       },
       error: err => {

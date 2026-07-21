@@ -16,7 +16,6 @@ import { I18nService } from '../../../core/services/i18n.service';
   selector: 'app-plant-detail',
   standalone: true,
   imports: [RouterLink, CommonModule, ButtonModule, SkeletonModule, TagModule, ToastModule],
-  providers: [MessageService],
   templateUrl: './plant-detail.component.html'
 })
 export class PlantDetailComponent implements OnInit {
@@ -79,7 +78,7 @@ export class PlantDetailComponent implements OnInit {
     this.addingToCart.set(true);
     this.cartService.add(p.id, this.quantity()).subscribe({
       next: () => {
-        this.toast.add({ severity: 'success', summary: 'Panier', detail: `${p.name} ajouté au panier` });
+        this.toast.add({ severity: 'success', summary: '✓', detail: `La plante '${p.name}' est au panier` });
         this.addingToCart.set(false);
       },
       error: err => {

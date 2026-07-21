@@ -18,7 +18,6 @@ import { ToastModule } from "primeng/toast";
   selector: "app-home",
   standalone: true,
   imports: [RouterLink, CommonModule, ToastModule],
-  providers: [MessageService],
   templateUrl: "./home.component.html",
 })
 export class HomeComponent implements OnInit {
@@ -111,7 +110,7 @@ export class HomeComponent implements OnInit {
         this.toast.add({
           severity: "success",
           summary: "✓",
-          detail: plant.name,
+          detail: `La plante '${plant.name}' est au panier`,
         }),
       error: (err) =>
         this.toast.add({

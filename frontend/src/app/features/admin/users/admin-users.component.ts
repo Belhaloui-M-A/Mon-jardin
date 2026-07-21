@@ -15,7 +15,6 @@ import { I18nService } from '../../../core/services/i18n.service';
   selector: 'app-admin-users',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, ButtonModule, TableModule, TagModule, ToastModule, DialogModule],
-  providers: [MessageService],
   templateUrl: './admin-users.component.html'
 })
 export class AdminUsersComponent implements OnInit {

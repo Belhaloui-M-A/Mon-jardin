@@ -14,7 +14,6 @@ import { I18nService } from '../../core/services/i18n.service';
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink, ButtonModule, InputTextModule, ToastModule],
-  providers: [MessageService],
   templateUrl: './profile.component.html'
 })
 export class ProfileComponent {

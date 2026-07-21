@@ -24,7 +24,7 @@ import { I18nService } from '../../../core/services/i18n.service';
   imports: [CommonModule, ReactiveFormsModule, ButtonModule, TableModule,
             DialogModule, InputTextModule, InputNumberModule, DropdownModule,
             InputTextareaModule, TagModule, ToastModule, ConfirmDialogModule, CheckboxModule],
-  providers: [MessageService, ConfirmationService],
+  providers: [ConfirmationService],
   templateUrl: './admin-plants.component.html'
 })
 export class AdminPlantsComponent implements OnInit {

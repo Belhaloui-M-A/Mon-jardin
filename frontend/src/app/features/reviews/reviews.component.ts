@@ -21,7 +21,6 @@ interface ReviewTarget {
   selector: 'app-reviews',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink, ToastModule, ButtonModule],
-  providers: [MessageService],
   templateUrl: './reviews.component.html'
 })
 export class ReviewsComponent implements OnInit {

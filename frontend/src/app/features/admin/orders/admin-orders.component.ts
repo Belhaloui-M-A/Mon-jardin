@@ -14,7 +14,6 @@ import { I18nService, Translations } from '../../../core/services/i18n.service';
   selector: 'app-admin-orders',
   standalone: true,
   imports: [CommonModule, ButtonModule, TableModule, TagModule, DropdownModule, ToastModule],
-  providers: [MessageService],
   templateUrl: './admin-orders.component.html'
 })
 export class AdminOrdersComponent implements OnInit {

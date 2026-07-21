@@ -18,7 +18,6 @@ import { I18nService } from '../../core/services/i18n.service';
   standalone: true,
   imports: [RouterLink, CommonModule, ReactiveFormsModule,
             ButtonModule, InputTextModule, InputTextareaModule, ToastModule],
-  providers: [MessageService],
   templateUrl: './checkout.component.html'
 })
 export class CheckoutComponent implements OnInit {
