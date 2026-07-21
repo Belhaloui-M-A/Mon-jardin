@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 // Upload images (public)
                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/images/**").permitAll()
                 // Admin uniquement
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 // Client authentifié
