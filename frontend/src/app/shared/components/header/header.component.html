@@ -6,7 +6,7 @@
   </a>
 
   <!-- Navigation centrale -->
-  <nav class="flex items-center gap-1 w-full order-3 md:order-none md:w-auto overflow-x-auto hide-scrollbar pb-2 md:pb-0 pt-2 md:pt-0">
+  <nav class="hidden md:flex items-center gap-1">
     <a
       routerLink="/"
       routerLinkActive="active"
@@ -230,13 +230,63 @@
         }
       </div>
     } @else {
-      <a routerLink="/auth/login"    class="nav-link">{{ t.nav_login }}</a>
-      <a routerLink="/auth/register" class="pv-btn-primary" style="padding:8px 20px;font-size:13px;border-radius:30px;white-space:nowrap">
+      <a routerLink="/auth/login"    class="nav-link hidden md:inline-flex">{{ t.nav_login }}</a>
+      <a routerLink="/auth/register" class="pv-btn-primary hidden md:inline-flex" style="padding:8px 20px;font-size:13px;border-radius:30px;white-space:nowrap">
         {{ t.nav_register }}
       </a>
     }
+
+    <!-- Menu Hamburger (Mobile) -->
+    <button class="md:hidden p-2 text-white/80 hover:text-white" (click)="isMobileNavOpen = true">
+      <i class="pi pi-bars text-2xl"></i>
+    </button>
   </div>
 </header>
+
+<!-- Mobile Navigation Menu (Fullscreen) -->
+@if (isMobileNavOpen) {
+  <div class="fixed inset-0 z-[100] flex flex-col" style="background-color: #050b07; background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 20px 20px;">
+    <!-- Top bar inside menu -->
+    <div class="flex justify-end p-6">
+      <button (click)="isMobileNavOpen = false" class="text-white/60 hover:text-white p-2">
+        <i class="pi pi-times text-2xl"></i>
+      </button>
+    </div>
+    
+    <!-- Centered Links -->
+    <div class="flex flex-col items-center justify-center flex-1 gap-8 text-center px-6 -mt-10">
+      <a routerLink="/" (click)="isMobileNavOpen = false" class="text-3xl font-semibold text-white/60 transition-colors" routerLinkActive="!text-emerald-400" [routerLinkActiveOptions]="{exact:true}">{{ t.nav_home }}</a>
+      <a routerLink="/catalogue" (click)="isMobileNavOpen = false" class="text-3xl font-semibold text-white/60 transition-colors" routerLinkActive="!text-emerald-400">{{ t.nav_catalogue }}</a>
+      <a routerLink="/reviews" (click)="isMobileNavOpen = false" class="text-3xl font-semibold text-white/60 transition-colors" routerLinkActive="!text-emerald-400">{{ t.review_label }}</a>
+      
+      @if (isLoggedIn && !isAdmin) {
+        <a routerLink="/orders" (click)="isMobileNavOpen = false" class="text-3xl font-semibold text-white/60 transition-colors" routerLinkActive="!text-emerald-400">{{ t.nav_orders }}</a>
+        <a routerLink="/wishlist" (click)="isMobileNavOpen = false" class="text-3xl font-semibold text-white/60 transition-colors" routerLinkActive="!text-emerald-400">{{ t.nav_wishlist }}</a>
+      }
+      
+      @if (isAdmin) {
+        <a routerLink="/admin" (click)="isMobileNavOpen = false" class="text-3xl font-semibold text-white/60 transition-colors" routerLinkActive="!text-emerald-400">{{ t.nav_dashboard }}</a>
+      }
+
+      <div class="mt-4 flex flex-col gap-4 w-full max-w-[200px]">
+        @if (!isLoggedIn) {
+          <a routerLink="/auth/login" (click)="isMobileNavOpen = false" class="w-full text-center border border-white/20 text-white rounded-xl py-3 font-medium flex items-center justify-center gap-2"><i class="pi pi-user"></i> {{ t.nav_login }}</a>
+          <a routerLink="/auth/register" (click)="isMobileNavOpen = false" class="w-full text-center bg-emerald-500 text-black rounded-xl py-3 font-medium">{{ t.nav_register }}</a>
+        } @else {
+          <button (click)="logout(); isMobileNavOpen = false" class="w-full text-center bg-emerald-500 text-black rounded-xl py-3 font-medium">{{ t.nav_logout }}</button>
+        }
+      </div>
+    </div>
+    
+    <!-- Theme Toggles -->
+    <div class="p-8 pb-12 flex justify-center">
+       <div class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full p-1.5">
+         <button class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300" [class.bg-emerald-500]="!isDark()" [class.text-black]="!isDark()" [class.text-white]="isDark()" (click)="isDark.set(false)"><i class="pi pi-sun"></i></button>
+         <button class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300" [class.bg-emerald-500]="isDark()" [class.text-black]="isDark()" [class.text-white]="!isDark()" (click)="isDark.set(true)"><i class="pi pi-moon"></i></button>
+       </div>
+    </div>
+  </div>
+}
 
 <!-- Overlay pour fermer les menus au clic extérieur -->
 @if (isMenuOpen || isLangOpen) {
