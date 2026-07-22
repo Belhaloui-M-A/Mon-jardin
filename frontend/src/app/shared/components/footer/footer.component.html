@@ -6,7 +6,7 @@
       <div class="col-span-12 md:col-span-6 text-start">
         <div class="flex items-center justify-start gap-3 mb-4">
           <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d399] animate-pulse"></div>
-          <span class="font-extrabold text-xl text-white">PlantVerde</span>
+          <span class="font-extrabold text-xl text-white">Mon-Jardin</span>
         </div>
         <p class="text-sm text-white/60 leading-relaxed mb-5 max-w-sm">
           {{ i18n.currentLang() === 'ar' ? (siteSettingsService.settings()?.descriptionAr || 'متجرك الإلكتروني لبيع النباتات في الجزائر. نباتات مختارة بعناية مع نصائح مخصصة للعناية بها.') : (siteSettingsService.settings()?.descriptionFr || 'Votre boutique de plantes en ligne en Algérie. Des plantes soigneusement sélectionnées, livrées avec leurs conseils d\'entretien.') }}
@@ -38,30 +38,30 @@
           </div>
           <div class="footer-contact">
             <i class="pi pi-phone text-emerald-400 text-xs"></i>
-            <span class="text-[13px] md:text-sm text-white/60">{{ siteSettingsService.settings()?.phoneContact || '05555555' }}</span>
+            <a [href]="'tel:' + (siteSettingsService.settings()?.phoneContact || '05555555')" class="footer-link">{{ siteSettingsService.settings()?.phoneContact || '05555555' }}</a>
           </div>
           <div class="footer-contact">
             <i class="pi pi-map-marker text-emerald-400 text-xs"></i>
             <span class="text-[13px] md:text-sm text-white/60">{{ i18n.currentLang() === 'ar' ? (siteSettingsService.settings()?.addressAr || 'تيارت، الجزائر') : (siteSettingsService.settings()?.addressFr || 'Tiaret, Algérie') }}</span>
           </div>
           <div class="footer-contact">
-            <i class="pi pi-clock text-white/30 text-xs"></i>
-            <span class="text-[11px] md:text-xs text-white/50">{{ t.footer_hours }}</span>
+            <i class="pi pi-clock text-emerald-400 text-xs"></i>
+            <span class="text-[11px] md:text-xs text-white/50">{{ siteSettingsService.settings()?.openingHours || t.footer_hours }}</span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Bottom -->
-    <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-      <p class="text-[11px] md:text-xs text-white/30">© {{ i18n.currentLang() === 'ar' ? '٢٠٢٦' : '2026' }} PlantVerde. {{ t.footer_rights }}</p>
-      <div class="flex flex-wrap justify-center items-center gap-3 md:gap-4 text-[11px] md:text-xs text-white/20">
+    <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-center gap-4 text-center md:text-left">
+      <p class="text-[11px] md:text-xs text-white/30">© {{ i18n.currentLang() === 'ar' ? '٢٠٢٦' : '2026' }} Mon-Jardin. {{ t.footer_rights }}</p>
+      <!-- <div class="flex flex-wrap justify-center items-center gap-3 md:gap-4 text-[11px] md:text-xs text-white/20">
         <span>Angular 19</span>
         <span class="w-1 h-1 rounded-full bg-white/20"></span>
         <span>Spring Boot 3</span>
         <span class="w-1 h-1 rounded-full bg-white/20"></span>
         <span>PostgreSQL</span>
-      </div>
+      </div> -->
     </div>
   </div>
 </footer>

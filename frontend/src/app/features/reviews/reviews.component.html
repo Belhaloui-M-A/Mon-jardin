@@ -19,7 +19,7 @@
         <div class="flex gap-1 mt-3">
           @for (i of range(5); track i) {
             <span class="text-xl transition-colors duration-200"
-                  [style.color]="i <= (s.average || 0) ? '#fbbf24' : 'rgba(255,255,255,.15)'">★</span>
+                  [style.color]="i <= (s.average || 0) ? '#fbbf24' : 'var(--star-empty)'">★</span>
           }
         </div>
         <div class="text-xs text-white/40 mt-2">
@@ -57,7 +57,7 @@
             <div class="flex gap-0.5 mt-2 justify-center">
               @for (i of range(5); track i) {
                 <span class="text-xs"
-                      [style.color]="i <= getAvgForTarget(target.key) ? '#fbbf24' : 'rgba(255,255,255,.1)'">★</span>
+                      [style.color]="i <= getAvgForTarget(target.key) ? '#fbbf24' : 'var(--star-empty)'">★</span>
               }
             </div>
           </div>
@@ -131,9 +131,9 @@
               <span class="text-3xl transition-all duration-150 select-none"
                     [ngClass]="{
                       'text-amber-500': i <= hoveredStar && hoveredStar > 0,
-                      'text-amber-400': i <= (hoveredStar || selectedRating) && !(i <= hoveredStar && hoveredStar > 0),
-                      'text-white/10': i > (hoveredStar || selectedRating)
+                      'text-amber-400': i <= (hoveredStar || selectedRating) && !(i <= hoveredStar && hoveredStar > 0)
                     }"
+                    [style.color]="i > (hoveredStar || selectedRating) ? 'var(--star-empty)' : null"
                     [style.textShadow]="i <= (hoveredStar || selectedRating) ? '0 0 12px rgba(251,191,36,0.5)' : 'none'">
                 ★
               </span>
@@ -220,7 +220,7 @@
                 <span class="text-lg text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]">★</span>
               }
               @for (i of emptyStars(review.rating); track i) {
-                <span class="text-lg text-white/10">★</span>
+                <span class="text-lg" [style.color]="'var(--star-empty)'">★</span>
               }
               <span class="text-xs font-bold text-amber-400 ms-2 font-mono">{{ review.rating }}/5</span>
             </div>

@@ -28,6 +28,10 @@ public class SiteSettings {
     @Builder.Default
     private String addressAr = "تيارت، الجزائر";
 
+    @Column(nullable = false, length = 100)
+    @Builder.Default
+    private String openingHours = "Lun–Sam : 8h–18h";
+
     @Column(nullable = false, columnDefinition = "TEXT")
     @Builder.Default
     private String descriptionFr = "Votre boutique de plantes en ligne en Algérie. Des plantes soigneusement sélectionnées, livrées avec leurs conseils d'entretien.";

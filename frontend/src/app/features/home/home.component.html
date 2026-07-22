@@ -222,7 +222,7 @@
             <span class="text-amber-400 text-base">★</span>
           }
           @for (i of emptyRange(r.rating); track i) {
-            <span class="text-white/10 text-base">★</span>
+            <span class="text-white/10 text-base" [style.color]="'var(--star-empty)'">★</span>
           }
         </div>
         @if (r.comment) {

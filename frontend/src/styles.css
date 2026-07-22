@@ -36,6 +36,7 @@
   --pv-danger: #f87171;
   --pv-warning: #fbbf24;
   --pv-success: #4ade80;
+  --star-empty: rgba(255, 255, 255, 0.15);
 }
 
 /* ============================================================
@@ -51,6 +52,7 @@
   --pv-text-primary: #0f2918;
   --pv-text-secondary: rgba(15, 41, 24, 0.72);
   --pv-text-muted: rgba(15, 41, 24, 0.48);
+  --star-empty: rgba(0, 0, 0, 0.18);
 }
 
 [data-theme="light"] body {
@@ -86,11 +88,14 @@
   color: #16a34a !important;
 }
 
-[data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3 {
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3 {
   color: #0f2918;
 }
 
-[data-theme="light"] p, [data-theme="light"] span {
+[data-theme="light"] p,
+[data-theme="light"] span {
   color: inherit;
 }
 
@@ -171,7 +176,6 @@
 [data-theme="light"] .cat-card-3d:hover {
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
-
 
 /* PrimeNG & Form Overrides for Light Mode */
 [data-theme="light"] .pv-input,
@@ -1506,12 +1510,15 @@ body {
    ============================================================ */
 .mobile-menu-bg {
   background-color: #050b07;
-  background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.03) 1px,
+    transparent 1px
+  );
   background-size: 20px 20px;
 }
 [data-theme="light"] .mobile-menu-bg {
   background-color: #f8fafc;
-  background-image: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px);
 }
 
 @media (max-width: 768px) {

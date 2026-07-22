@@ -37,6 +37,7 @@ export interface SiteSettings {
   phoneContact: string;
   addressFr: string;
   addressAr: string;
+  openingHours?: string;
   descriptionFr: string;
   descriptionAr: string;
 }

@@ -26,6 +26,7 @@ public class SiteSettingsService {
         current.setPhoneContact(updated.getPhoneContact());
         current.setAddressFr(updated.getAddressFr());
         current.setAddressAr(updated.getAddressAr());
+        current.setOpeningHours(updated.getOpeningHours());
         current.setDescriptionFr(updated.getDescriptionFr());
         current.setDescriptionAr(updated.getDescriptionAr());
         return repository.save(current);

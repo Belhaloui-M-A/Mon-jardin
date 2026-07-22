@@ -2,7 +2,7 @@
   <!-- Logo -->
   <a routerLink="/" class="pv-nav-logo">
     <div class="pv-dot"></div>
-    PlantVerde
+    Mon-Jardin
   </a>
 
   <!-- Navigation centrale -->
@@ -216,6 +216,11 @@
                 class="dropdown-item"
                 ><i class="pi pi-users"></i> {{ t.nav_users }}</a
               >
+              <button
+                (click)="showSettingsModal(); isMenuOpen = false"
+                class="dropdown-item w-full text-start"
+                ><i class="pi pi-cog"></i> {{ i18n.currentLang() === 'ar' ? 'تعديل المعلومات' : 'Modifier les informations' }}</button
+              >
             }
             <div
               style="
@@ -320,6 +325,64 @@
     (click)="isMenuOpen = false; isLangOpen = false"
   ></div>
 }
+
+<!-- Settings Modal -->
+<p-dialog [(visible)]="displaySettingsModal" [modal]="true" [header]="i18n.currentLang() === 'ar' ? 'تعديل معلومات الموقع' : 'Modifier les informations du site'"
+          [style]="{width: '100%', maxWidth: '600px'}" styleClass="pv-dark-dialog"
+          [draggable]="false" [resizable]="false">
+  <form [formGroup]="settingsForm" (ngSubmit)="saveSettings()" class="flex flex-col gap-5 pt-4">
+
+    <div class="grid grid-cols-2 gap-4">
+      <div class="flex flex-col gap-1.5">
+        <label class="pv-label text-start">Email Contact *</label>
+        <input type="email" formControlName="emailContact" class="pv-input" dir="ltr">
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="pv-label text-start">Phone Contact *</label>
+        <input type="text" formControlName="phoneContact" class="pv-input" dir="ltr">
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div class="flex flex-col gap-1.5">
+        <label class="pv-label text-start">Adresse (FR) *</label>
+        <input type="text" formControlName="addressFr" class="pv-input">
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="pv-label text-start">Adresse (AR) *</label>
+        <input type="text" formControlName="addressAr" class="pv-input" dir="rtl">
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="pv-label text-start">{{ i18n.currentLang() === 'ar' ? 'أوقات العمل' : 'Horaires d\'ouverture' }} *</label>
+      <input type="text" formControlName="openingHours" class="pv-input" placeholder="ex: Lun–Sam : 8h–18h">
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="pv-label text-start">Description Footer (FR) *</label>
+      <textarea formControlName="descriptionFr" class="pv-input" rows="3"></textarea>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="pv-label text-start">Description Footer (AR) *</label>
+      <textarea formControlName="descriptionAr" class="pv-input" rows="3" dir="rtl"></textarea>
+    </div>
+
+    <div class="flex justify-end gap-3 pt-3 border-t border-white/10">
+      <button type="button" class="pv-btn-ghost" (click)="displaySettingsModal.set(false)">{{ t.admin_cancel }}</button>
+      <button type="submit" class="pv-btn-primary" [disabled]="settingsForm.invalid || savingSettings()">
+        @if (savingSettings()) {
+          <i class="pi pi-spin pi-spinner"></i>
+        } @else {
+          <i class="pi pi-check"></i>
+        }
+        <span>{{ i18n.currentLang() === 'ar' ? 'حفظ' : 'Enregistrer' }}</span>
+      </button>
+    </div>
+  </form>
+</p-dialog>
+
 
 <style>
   /* Nav links */
